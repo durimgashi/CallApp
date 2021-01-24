@@ -1,0 +1,10 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.TemaDiplomes" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/twitterBlue</item>
+        <item name="colorPrimaryDark">@color/twitterBlue</item>
+        <item name="colorAccent">@color/twitterBlue</item>
+        <!-- Customize your theme here. -->
+    </style>
+</resources>
