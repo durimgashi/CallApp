@@ -3,7 +3,10 @@ package com.fiek.temadiplomes;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -40,6 +43,7 @@ public class ContactsActivity extends AppCompatActivity {
     private CollectionReference firebaseRef = FirebaseFirestore.getInstance().collection("users");
     private RelativeLayout callNotification;
     private ImageView rejectBtn, answerBtn;
+    private EditText searchBar;
     private Vibrator myVib;
 
 
@@ -51,11 +55,10 @@ public class ContactsActivity extends AppCompatActivity {
         logOutButton = findViewById(R.id.logOutButton);
         addContactFAB = findViewById(R.id.addContactFAB);
         callNotification = findViewById(R.id.callNotification);
-
+        searchBar = findViewById(R.id.searchBar);
         rejectBtn = findViewById(R.id.rejectBtn);
         answerBtn = findViewById(R.id.answerBtn);
 
-//        userUID = getIntent().getStringExtra("username");
         userUID = FirebaseAuth.getInstance().getUid();
 
         loadContacts();
@@ -85,6 +88,42 @@ public class ContactsActivity extends AppCompatActivity {
             FirebaseAuth.getInstance().signOut();
             startActivity(new Intent(ContactsActivity.this, MainActivity.class));
         });
+
+        addContactFAB.setOnClickListener(v -> {
+            startActivity(new Intent(ContactsActivity.this, AddContactActivity.class));
+        });
+
+        searchBar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                filter(searchBar.getText().toString());
+            }
+        });
+    }
+
+    private void filter(String text) {
+        //new array list that will hold the filtered data
+        ArrayList<String> filterdNames = new ArrayList<>();
+
+        //looping through existing elements
+        for (String s : friends) {
+            //if the existing elements contains the search input
+            if (s.toLowerCase().contains(text.toLowerCase())) {
+                //adding the element to filtered list
+                filterdNames.add(s);
+            }
+        }
+
+        //calling a method of the adapter class and passing the filtered list
+        adapter.filterList(filterdNames);
     }
 
     private void monitorCalls(){
@@ -95,18 +134,12 @@ public class ContactsActivity extends AppCompatActivity {
                         assert value != null;
                         String incoming = value.get("incoming").toString();
                         if(!incoming.equals("")){
-//                            Toast.makeText(VideoCallActivity.this, incoming + " is calling you", Toast.LENGTH_LONG).show();
                             callNotification.setVisibility(View.VISIBLE);
 //                            myVib.vibrate(1000);
                         }
                     }
                 });
     }
-
-    private void onCallRequest(){
-
-    }
-
 
     private void loadContacts() {
         RecyclerView contactsRecyclerView = findViewById(R.id.contactsRecyclerView);

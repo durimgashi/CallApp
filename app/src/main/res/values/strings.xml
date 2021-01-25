@@ -15,4 +15,7 @@
     <string name="search_contact">Search contact</string>
     <string name="todo">TODO</string>
     <string name="someone_is_calling">Someone is calling...</string>
+    <string name="tx_available">\" Available\"</string>
+    <string name="tx_unavailable">\" Unvailable\"</string>
+    <string name="search_by_username">Search by username</string>
 </resources>

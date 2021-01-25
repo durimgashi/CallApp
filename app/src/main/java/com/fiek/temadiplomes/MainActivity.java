@@ -27,13 +27,11 @@ public class MainActivity extends AppCompatActivity {
     private TextView signUpLink;
     private Button logInButton;
     private EditText etUsername, etPassword;
-    private String[] permissions = {
+    private Integer requestcode = 1;
+    private FirebaseAuth firebaseAuth;
+    private final String[] permissions = {
         Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO
     };
-    private Integer requestcode = 1;
-
-    private int RC_SIGN_IN = 1;
-    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,31 +57,23 @@ public class MainActivity extends AppCompatActivity {
         etUsername = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
 
-        signUpLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, SignUpActivity.class));
-            }
-        });
+        signUpLink.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, SignUpActivity.class)));
 
-        logInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email = etUsername.getText().toString().trim();
-                String password = etPassword.getText().toString();
-                firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()){
-                            Intent intent = new Intent(MainActivity.this, ContactsActivity.class);
-                            intent.putExtra("username", firebaseAuth.getCurrentUser().getUid());
-                            startActivity(intent);
-                        } else {
-                            Toast.makeText(MainActivity.this, "Error" + task.getException().getMessage() , Toast.LENGTH_SHORT).show();
-                        }
+        logInButton.setOnClickListener(v -> {
+            String email = etUsername.getText().toString().trim();
+            String password = etPassword.getText().toString();
+            firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()){
+                        Intent intent = new Intent(MainActivity.this, ContactsActivity.class);
+                        intent.putExtra("username", firebaseAuth.getCurrentUser().getUid());
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(MainActivity.this, "Error" + task.getException().getMessage() , Toast.LENGTH_SHORT).show();
                     }
-                });
-            }
+                }
+            });
         });
     }
 
