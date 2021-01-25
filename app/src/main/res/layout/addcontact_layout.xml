@@ -8,22 +8,22 @@
     android:orientation="vertical"
     android:background="@color/twitterBlue"
     android:padding="10dp">
+
     <EditText
         android:id="@+id/usernameAdd"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:autofillHints=""
-        android:backgroundTint="@color/white"
-        android:hint="@string/search_by_username"
-        android:imeOptions="actionNext"
-        android:inputType="text"
-        android:textColor="@color/white"
+        android:layout_height="40dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/button"
+        android:ems="10"
+        android:hint="@string/search_contact"
+        android:drawablePadding="10dp"
         android:textColorHint="@color/white"
-        android:textCursorDrawable="@color/white" />
+        android:textColor="@color/white"
+        android:gravity="center" />
 
-    <androidx.cardview.widget.CardView
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <include layout="@layout/contact_add"/>
-    </androidx.cardview.widget.CardView>
+        android:layout_height="wrap_content"
+        android:id="@+id/contactsRecyclerView"/>
 </LinearLayout>

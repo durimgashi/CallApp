@@ -6,15 +6,25 @@ public class User {
     private String email;
     private String username;
     private List<String> friends;
+    private Boolean available;
 
     public User(){
 
     }
 
-    public User(String email, String username, List<String> friends) {
+    public User(String email, String username, List<String> friends, Boolean available) {
         this.email = email;
         this.username = username;
         this.friends = friends;
+        this.available = available;
+    }
+
+    public Boolean getAvailable() {
+        return available;
+    }
+
+    public void setAvailable(Boolean available) {
+        this.available = available;
     }
 
     public String getEmail() {

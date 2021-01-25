@@ -11,6 +11,8 @@ import android.webkit.PermissionRequest;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fiek.temadiplomes.Interfaces.JavaScriptInterface;
@@ -26,28 +28,37 @@ import java.util.Objects;
 public class VideoCallActivity extends AppCompatActivity {
 
     private WebView webView;
-
     private Boolean isPeerConnencted = false;
     private CollectionReference firebaseRef = FirebaseFirestore.getInstance().collection("users");
     private Boolean isAudio = true;
     private Boolean isVideo = true;
     private String friendUID, userUID;
+    private TextView endCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.videocall_layout);
+
         webView = findViewById(R.id.videocallWV);
+        endCall = findViewById(R.id.endCall);
 
         userUID = FirebaseAuth.getInstance().getUid();
         friendUID = getIntent().getStringExtra("friendUID");
 
-        //Toast.makeText(VideoCallActivity.this, userUID + "Calling: " + friendUID, Toast.LENGTH_SHORT).show();
-
+        //Toast.makeText(VideoCallActivity.this, userUID + " ///" + friendUID, Toast.LENGTH_LONG).show();
         sendCallRequest();
 
         setupWebView();
         monitorCallAnswer();
+
+        endCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                endItAll();
+                finish();
+            }
+        });
     }
 
     private void sendCallRequest() {
@@ -72,8 +83,7 @@ public class VideoCallActivity extends AppCompatActivity {
                         assert value != null;
                         String incoming = value.get("incoming").toString();
                         if(incoming.equals("")){
-//                            Toast.makeText(VideoCallActivity.this, incoming + " is calling you", Toast.LENGTH_LONG).show();
-                            startActivity(new Intent(VideoCallActivity.this, ContactsActivity.class));
+                            endItAll();
                         }
                     }
                 });
@@ -136,7 +146,13 @@ public class VideoCallActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        endItAll();
+    }
+
+    public void endItAll(){
+        webView.loadUrl("");
         firebaseRef.document(userUID).update("incoming", "");
         firebaseRef.document(friendUID).update("incoming", "");
+        startActivity(new Intent(VideoCallActivity.this, ContactsActivity.class));
     }
 }

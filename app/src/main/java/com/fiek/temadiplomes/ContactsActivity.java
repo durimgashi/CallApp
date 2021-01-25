@@ -17,7 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.fiek.temadiplomes.Adapters.RecyclerViewAdapter;
+import com.fiek.temadiplomes.Adapters.ContactAdapter;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,7 +35,7 @@ import java.util.Objects;
 
 public class ContactsActivity extends AppCompatActivity {
 
-    private RecyclerViewAdapter adapter;
+    private ContactAdapter adapter;
     private List<String> friends =  new ArrayList<>();
     private String userUID;
     private TextView logOutButton;
@@ -90,7 +90,8 @@ public class ContactsActivity extends AppCompatActivity {
         });
 
         addContactFAB.setOnClickListener(v -> {
-            startActivity(new Intent(ContactsActivity.this, AddContactActivity.class));
+            startActivityForResult(new Intent(ContactsActivity.this, AddContactActivity.class), RESULT_OK);
+            finish();
         });
 
         searchBar.addTextChangedListener(new TextWatcher() {
@@ -141,8 +142,10 @@ public class ContactsActivity extends AppCompatActivity {
                 });
     }
 
-    private void loadContacts() {
-        RecyclerView contactsRecyclerView = findViewById(R.id.contactsRecyclerView);
+    public RecyclerView contactsRecyclerView;
+
+    public void loadContacts() {
+        contactsRecyclerView = findViewById(R.id.contactsRecyclerView);
         DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(userUID);
         docRef.get()
                 .addOnSuccessListener(documentSnapshot -> {
@@ -153,7 +156,7 @@ public class ContactsActivity extends AppCompatActivity {
 
                         if(friends != null){
                             contactsRecyclerView.setLayoutManager(new LinearLayoutManager(ContactsActivity.this));
-                            adapter = new RecyclerViewAdapter(ContactsActivity.this, friends);
+                            adapter = new ContactAdapter(ContactsActivity.this, friends);
                             contactsRecyclerView.setAdapter(adapter);
                         }
                     } else {

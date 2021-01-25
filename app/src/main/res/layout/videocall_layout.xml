@@ -11,19 +11,35 @@
         android:id="@+id/videocallWV">
     </WebView>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="12:00"
+        android:textSize="30sp"
+        android:layout_marginBottom="200dp"
+        android:textColor="@color/common_google_signin_btn_text_dark_pressed"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="350dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="350dp">
+        app:layout_constraintTop_toTopOf="parent">
+
         <TextView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:background="@drawable/ic_phone"
+            android:id="@+id/endCall"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:background="@drawable/endcall"
             android:gravity="center"
             android:textAlignment="center" />
     </LinearLayout>

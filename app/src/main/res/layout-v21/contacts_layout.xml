@@ -24,19 +24,18 @@
             android:id="@+id/incomingCallTxt"/>
         <ImageView
             android:id="@+id/answerBtn"
-            android:layout_width="45dp"
+            android:layout_width="50dp"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_phone"
+            android:src="@drawable/answercall"
             android:layout_toStartOf="@+id/rejectBtn"
             android:padding="2dp"
             android:layout_marginHorizontal="10dp"/>
 
         <ImageView
-            android:rotation="90"
             android:id="@+id/rejectBtn"
-            android:layout_width="45dp"
+            android:layout_width="50dp"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_reject"
+            android:src="@drawable/endcall"
             android:layout_alignParentEnd="true"
             android:padding="2dp"
             android:layout_marginHorizontal="10dp"/>

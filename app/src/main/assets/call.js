@@ -27,7 +27,7 @@ function listen() {
     peer.on('call', (call) => {
 
         navigator.getUserMedia({
-            audio: true, 
+            audio: true,
             video: true
         }, (stream) => {
             localVideo.srcObject = stream

@@ -72,7 +72,7 @@ public class SignUpActivity extends AppCompatActivity {
                             if (task.isSuccessful()){
                                 //Saving user to collection
                                 userId = firebaseAuth.getCurrentUser().getUid();
-                                User user = new User(firebaseAuth.getCurrentUser().getEmail(), username, null);
+                                User user = new User(firebaseAuth.getCurrentUser().getEmail(), username, null, false);
                                 saveUserToFirestore(user, userId);
 
                                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);

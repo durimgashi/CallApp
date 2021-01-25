@@ -1,6 +1,7 @@
 package com.fiek.temadiplomes.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fiek.temadiplomes.R;
+import com.fiek.temadiplomes.VideoCallActivity;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -18,15 +20,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
-
+public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> {
     private List<String> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     private Context mContext;
     private List<String> Uid = new ArrayList<>();
 
-    public RecyclerViewAdapter(Context context, List<String> data) {
+    public ContactAdapter(Context context, List<String> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
         this.mContext = context;
@@ -49,10 +50,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         holder.username.setText(Objects.requireNonNull(documentSnapshot.get("username")).toString());
                         if (Objects.requireNonNull(documentSnapshot.getBoolean("available"))){
                             holder.callTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_available, 0, 0, 0);
-                            holder.callTime.setText(R.string.tx_available);
+                            holder.callTime.setText(" Online");
                         } else {
                             holder.callTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_unavailable, 0, 0, 0);
-                            holder.callTime.setText(R.string.tx_unavailable);
+                            holder.callTime.setText(" Offline");
                         }
                     }
                 })
@@ -77,12 +78,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             videoIcon = itemView.findViewById(R.id.videoIcon);
             itemView.setOnClickListener(this);
 
-            videoIcon.setOnClickListener(v -> Toast.makeText( mContext , "Calling : " + Uid.get(getAdapterPosition()), Toast.LENGTH_SHORT).show());
-//            videoIcon.setOnClickListener(v -> {
-//                Intent intent = new Intent(mContext, VideoCallActivity.class);
-//                intent.putExtra("friendUID", calltime.getText());
-//                mContext.startActivity(intent);
-//            });
+//            videoIcon.setOnClickListener(v -> Toast.makeText( mContext , "Calling : " + Uid.get(getAdapterPosition()), Toast.LENGTH_SHORT).show());
+            videoIcon.setOnClickListener(v -> {
+//                Toast.makeText(mContext, "Friend: " + Uid.get(getAdapterPosition()), Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(mContext, VideoCallActivity.class);
+                intent.putExtra("friendUID", Uid.get(getAdapterPosition()));
+                mContext.startActivity(intent);
+            });
         }
 
         @Override
