@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.fiek.temadiplomes.R;
 import com.fiek.temadiplomes.VideoCallActivity;
+import com.fiek.temadiplomes.VoiceCallActivity;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -83,6 +84,12 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
 //                Toast.makeText(mContext, "Friend: " + Uid.get(getAdapterPosition()), Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(mContext, VideoCallActivity.class);
                 intent.putExtra("friendUID", Uid.get(getAdapterPosition()));
+                mContext.startActivity(intent);
+            });
+
+            phoneIcon.setOnClickListener(v -> {
+//                Toast.makeText(mContext, "Friend: " + Uid.get(getAdapterPosition()), Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(mContext, VoiceCallActivity.class);
                 mContext.startActivity(intent);
             });
         }

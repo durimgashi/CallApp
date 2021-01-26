@@ -16,4 +16,6 @@
     <style name="Theme.TemaDiplomes.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.TemaDiplomes.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="Themefull" parent="" />
 </resources>
