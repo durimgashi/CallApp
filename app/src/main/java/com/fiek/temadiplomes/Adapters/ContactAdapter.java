@@ -89,7 +89,10 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
 
             phoneIcon.setOnClickListener(v -> {
 //                Toast.makeText(mContext, "Friend: " + Uid.get(getAdapterPosition()), Toast.LENGTH_LONG).show();
+//                Intent intent = new Intent(mContext, VoiceCallActivity.class);
+//                mContext.startActivity(intent);
                 Intent intent = new Intent(mContext, VoiceCallActivity.class);
+                intent.putExtra("friendUID", Uid.get(getAdapterPosition()));
                 mContext.startActivity(intent);
             });
         }
