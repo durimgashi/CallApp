@@ -17,6 +17,9 @@ public class VoiceCallActivity extends AppCompatActivity {
 
         webView = findViewById(R.id.voicecallWV);
         webView.loadUrl("file:android_asset/voice.html");
-
+        getWindow().setFlags(
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+        );
     }
 }
