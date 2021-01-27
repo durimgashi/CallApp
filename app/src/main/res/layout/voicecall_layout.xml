@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".VoiceCallActivity">
+    tools:context=".VoiceCallActivity"
+    android:background="@color/twitterBlue">
     <WebView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -39,9 +40,15 @@
             android:id="@+id/endCall"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:background="@drawable/endcall"
+            android:background="@drawable/ic_addcontact"
             android:gravity="center"
             android:textAlignment="center" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="video"
+            android:id="@+id/test"/>
     </LinearLayout>
 
 

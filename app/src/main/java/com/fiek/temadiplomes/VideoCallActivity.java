@@ -128,7 +128,7 @@ public class VideoCallActivity extends AppCompatActivity {
                 public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                     assert value != null;
                     String incoming = value.get("incoming").toString();
-                    if(!incoming.equals("")){
+                    if(!incoming.equalsIgnoreCase("")){
 //                        Toast.makeText(VideoCallActivity.this, incoming + " is calling you", Toast.LENGTH_LONG).show();
                     }
                 }

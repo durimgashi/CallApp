@@ -4,8 +4,8 @@ let remoteVideo = document.getElementById("remote-video")
 localVideo.style.opacity = 0
 remoteVideo.style.opacity = 0
 
-localVideo.onplaying = () => { localVideo.style.opacity = 1 }
-remoteVideo.onplaying = () => { remoteVideo.style.opacity = 1 }
+//localVideo.onplaying = () => { localVideo.style.opacity = 1 }
+//remoteVideo.onplaying = () => { remoteVideo.style.opacity = 1 }
 
 let peer
 function init(userId) {
@@ -28,7 +28,7 @@ function listen() {
 
         navigator.getUserMedia({
             audio: true,
-            video: true
+            video: false
         }, (stream) => {
             localVideo.srcObject = stream
             localStream = stream
@@ -39,6 +39,7 @@ function listen() {
 
                 remoteVideo.className = "primary-video"
                 localVideo.className = "secondary-video"
+
             })
 
         })
@@ -46,15 +47,10 @@ function listen() {
     })
 }
 
-function hideVideoElements(){
-    remoteVideo.style.visibility = 'hidden';
-    localVideo.style.visibility = 'hidden';
-}
-
 function startCall(otherUserId) {
     navigator.getUserMedia({
         audio: true,
-        video: true
+        video: false
     }, (stream) => {
 
         localVideo.srcObject = stream
@@ -66,20 +62,42 @@ function startCall(otherUserId) {
 
             remoteVideo.className = "primary-video"
             localVideo.className = "secondary-video"
-
         })
 
     })
 }
+
+//function startVoiceCall(otherUserId) {
+//    navigator.getUserMedia({
+//        audio: true,
+//        video: false
+//    }, (stream) => {
+//
+//        localVideo.srcObject = stream
+//        localStream = stream
+//
+//        const call = peer.call(otherUserId, stream)
+//        call.on('stream', (remoteStream) => {
+//            remoteVideo.srcObject = remoteStream
+//
+//            remoteVideo.className = "primary-video"
+//            localVideo.className = "secondary-video"
+//
+//
+//
+//            localVideo.style.opacity = 0
+//            remote.style.opacity = 0
+//        })
+//    })
+//}
 
 function toggleVideo(b) {
     if (b == "true") {
         localStream.getVideoTracks()[0].enabled = true
     } else {
         localStream.getVideoTracks()[0].enabled = false
-        hideVideoElements()
     }
-} 
+}
 
 function toggleAudio(b) {
     if (b == "true") {
@@ -87,4 +105,4 @@ function toggleAudio(b) {
     } else {
         localStream.getAudioTracks()[0].enabled = false
     }
-} 
+}
