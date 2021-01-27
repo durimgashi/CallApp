@@ -21,7 +21,8 @@
             android:textColor="#000"
             android:textSize="15sp"
             android:gravity="center"
-            android:id="@+id/incomingCallTxt"/>
+            android:id="@+id/incomingCallTxt"
+            tools:ignore="RelativeOverlap" />
         <ImageView
             android:id="@+id/answerBtn"
             android:layout_width="50dp"
