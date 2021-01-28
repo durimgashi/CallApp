@@ -17,10 +17,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TemaDiplomes.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".VoiceCallActivity" />
+        <activity android:name=".VoiceCallActivity"
+            android:noHistory="true"/>
         <activity android:name=".AddContactActivity" />
-        <activity android:name=".VideoCallActivity" />
-        <activity android:name=".ContactsActivity" />
+        <activity android:name=".VideoCallActivity"
+            android:noHistory="true"/>
+        <activity android:name=".ContactsActivity"
+            android:noHistory="true"/>
         <activity android:name=".SignUpActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>

@@ -23,7 +23,7 @@
             android:layout_height="200dp"
             android:layout_gravity="center"
             android:layout_marginBottom="30dp"
-            android:src="@drawable/soundwave" />
+            android:src="@drawable/bird" />
 
         <EditText
             android:id="@+id/etUsername"
@@ -32,6 +32,7 @@
             android:autofillHints=""
             android:backgroundTint="@color/white"
             android:hint="Username"
+            android:fontFamily="@font/montserratlightttf"
             android:imeOptions="actionNext"
             android:inputType="text"
             android:textColor="@color/white"
@@ -45,6 +46,7 @@
             android:autofillHints=""
             android:backgroundTint="@color/white"
             android:hint="Password"
+            android:fontFamily="@font/montserratlightttf"
             android:imeOptions="actionNext"
             android:inputType="textPassword"
             android:textColor="@color/white"
@@ -55,6 +57,7 @@
             android:id="@+id/logInButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/montserratlightttf"
             android:layout_marginTop="20dp"
             android:background="@drawable/button"
             android:text="@string/log_in"
@@ -70,11 +73,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Don't have an account?"
+                android:fontFamily="@font/montserratlightttf"
                 android:textColor="@color/white"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Sign up"
+                android:fontFamily="@font/montserratlightttf"
                 android:id="@+id/signUpLink"
                 android:textColor="@color/white"/>
         </LinearLayout>

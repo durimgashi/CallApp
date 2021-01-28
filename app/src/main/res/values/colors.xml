@@ -3,4 +3,8 @@
     <color name="twitterBlue">#00ACEE</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="colorGradientStart">#D9FF43</color>
+    <color name="colorGradientCenter">#F67831</color>
+    <color name="colorGradientEnd">#FF1493</color>
 </resources>

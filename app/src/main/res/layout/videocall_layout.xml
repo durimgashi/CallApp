@@ -12,10 +12,12 @@
     </WebView>
 
     <TextView
+        android:id="@+id/textToCounter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="12:00"
+        android:text="Calling"
+        android:fontFamily="@font/montserratlightttf"
         android:textSize="30sp"
         android:layout_marginBottom="200dp"
         android:textColor="@color/common_google_signin_btn_text_dark_pressed"
@@ -40,9 +42,8 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:background="@drawable/endcall"
+            android:fontFamily="@font/montserratlightttf"
             android:gravity="center"
             android:textAlignment="center" />
     </LinearLayout>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

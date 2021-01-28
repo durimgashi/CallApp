@@ -47,8 +47,14 @@ function listen() {
 }
 
 function hideVideoElements(){
-    remoteVideo.style.visibility = 'hidden';
-    localVideo.style.visibility = 'hidden';
+//    remoteVideo.style.visibility = 'hidden';
+//    localVideo.style.visibility = 'hidden';
+
+    localVideo.style.visibility = 'hidden'
+    remoteVideo.style.visibility = 'hidden'
+
+    localVideo.style.opacity = 0
+    remoteVideo.style.opacity = 0
 }
 
 function startCall(otherUserId) {

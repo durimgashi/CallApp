@@ -3,9 +3,13 @@ package com.fiek.temadiplomes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -14,6 +18,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,16 +46,27 @@ public class VoiceCallActivity extends AppCompatActivity {
     private Boolean isVideo = true;
     private String friendUID, userUID;
     private TextView endCall;
-
+    private ConstraintLayout voiceCallConstraintLayout;
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private final DatabaseReference ref = database.getReference();
+    private AnimationDrawable animationDrawable;
+    private Chronometer simpleChronometer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.voicecall_layout);
 
+        simpleChronometer = findViewById(R.id.counter);
         webView = findViewById(R.id.voicecallWV);
+        webView.setVisibility(View.INVISIBLE);
+
+        voiceCallConstraintLayout = findViewById(R.id.voiceCallConstraintLayout);
+        animationDrawable = (AnimationDrawable) voiceCallConstraintLayout.getBackground();
+        animationDrawable.setEnterFadeDuration(3000);
+        animationDrawable.setExitFadeDuration(2000);
+        animationDrawable.start();
+
         endCall = findViewById(R.id.endCall);
 
         getWindow().setFlags(
@@ -61,53 +77,35 @@ public class VoiceCallActivity extends AppCompatActivity {
         userUID = FirebaseAuth.getInstance().getUid();
         friendUID = getIntent().getStringExtra("friendUID");
 
-        sendCallRequest();
+        if (!friendUID.equals("") || friendUID != null || friendUID.length() < 5){
+            sendCallRequest();
+            setupWebView();
+        }
 
-        setupWebView();
-        monitorCallAnswer();
-
-        endCall.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                endItAll();
-                finish();
-            }
-        });
-
-        Button test = findViewById(R.id.test);
-        test.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                callJavaScriptFunction("javascript:toggleVideo(false)");
-                webView.setVisibility(View.INVISIBLE);
-            }
-        });
+        endCall.setOnClickListener(v -> endItAll());
     }
 
     private void sendCallRequest() {
-//        if (!isPeerConnencted){
-//            Toast.makeText(VideoCallActivity.this, "Not connected!", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-        Toast.makeText(VoiceCallActivity.this, friendUID, Toast.LENGTH_LONG).show();
-        ref.child(friendUID).child("incoming").setValue(userUID);
-
+        ref.child(friendUID).child(Constants.INCOMING_FIELD).setValue(userUID);
         listenForConnectionId();
     }
 
     private void listenForConnectionId() {
         callJavaScriptFunction("javascript:startCall('" + friendUID + "')");
+        callJavaScriptFunction("javascript:toggleVideo(false)");
+        monitorCallAnswer();
+        startCheckingForEnd();
     }
 
     private void monitorCallAnswer(){
-        ref.child(userUID).child("incoming").addValueEventListener(new ValueEventListener() {
+        ref.child(userUID).child(Constants.INCOMING_FIELD).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.getValue().equals(friendUID)){
-                    Toast.makeText(VoiceCallActivity.this, "Timer starts here", Toast.LENGTH_LONG).show();
-                    ref.removeEventListener(this);
-                    startCheckingForEnd();
+                    findViewById(R.id.textToCounter).setVisibility(View.INVISIBLE);
+                    simpleChronometer.setVisibility(View.VISIBLE);
+                    simpleChronometer.setBase(SystemClock.elapsedRealtime());
+                    simpleChronometer.start();
                 }
             }
 
@@ -119,11 +117,12 @@ public class VoiceCallActivity extends AppCompatActivity {
     }
 
     private void startCheckingForEnd(){
-        ref.child(friendUID).child("incoming").addValueEventListener(new ValueEventListener() {
+        ref.child(friendUID).child(Constants.INCOMING_FIELD).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (!snapshot.getValue().equals(userUID)){
-                    Toast.makeText(VoiceCallActivity.this, "Call has ended!", Toast.LENGTH_LONG).show();
+//                    Toast.makeText(VoiceCallActivity.this, "Call has ended!", Toast.LENGTH_LONG).show();
+                    endItAll();
                     ref.removeEventListener(this);
                 }
             }
@@ -135,6 +134,7 @@ public class VoiceCallActivity extends AppCompatActivity {
         });
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     private void setupWebView(){
         webView.setWebChromeClient(new WebChromeClient(){
             @Override
@@ -176,16 +176,12 @@ public class VoiceCallActivity extends AppCompatActivity {
         isPeerConnencted = true;
     }
 
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        endItAll();
-//    }
-
     public void endItAll(){
-        webView.loadUrl("");
-        ref.child(userUID).child("incoming").setValue("");
-        ref.child(friendUID).child("incoming").setValue("");
-        startActivity(new Intent(VoiceCallActivity.this, ContactsActivity.class));
+        webView.loadUrl("about:blank");
+        Intent intent = new Intent(VoiceCallActivity.this, ContactsActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        ref.child(FirebaseAuth.getInstance().getUid()).child(Constants.INCOMING_FIELD).setValue("");
+        finish();
     }
 }

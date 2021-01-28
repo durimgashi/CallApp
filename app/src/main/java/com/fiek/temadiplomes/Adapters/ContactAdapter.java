@@ -79,19 +79,16 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
             videoIcon = itemView.findViewById(R.id.videoIcon);
             itemView.setOnClickListener(this);
 
-//            videoIcon.setOnClickListener(v -> Toast.makeText( mContext , "Calling : " + Uid.get(getAdapterPosition()), Toast.LENGTH_SHORT).show());
             videoIcon.setOnClickListener(v -> {
-//                Toast.makeText(mContext, "Friend: " + Uid.get(getAdapterPosition()), Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(mContext, VideoCallActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP| Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.putExtra("friendUID", Uid.get(getAdapterPosition()));
                 mContext.startActivity(intent);
             });
 
             phoneIcon.setOnClickListener(v -> {
-//                Toast.makeText(mContext, "Friend: " + Uid.get(getAdapterPosition()), Toast.LENGTH_LONG).show();
-//                Intent intent = new Intent(mContext, VoiceCallActivity.class);
-//                mContext.startActivity(intent);
                 Intent intent = new Intent(mContext, VoiceCallActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP| Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.putExtra("friendUID", Uid.get(getAdapterPosition()));
                 mContext.startActivity(intent);
             });

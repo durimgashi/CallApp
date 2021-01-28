@@ -55,12 +55,13 @@ public class ContactsActivity extends AppCompatActivity {
     private CollectionReference firebaseRef = FirebaseFirestore.getInstance().collection("users");
     private RelativeLayout callNotification;
     private ImageView rejectBtn, answerBtn;
-    private EditText searchBar;
     private Vibrator myVib;
     private TextView incomingCallTxt;
 
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference ref = database.getReference();
+
+    private String incomingUid;
 
 
     @Override
@@ -71,38 +72,28 @@ public class ContactsActivity extends AppCompatActivity {
         logOutButton = findViewById(R.id.logOutButton);
         addContactFAB = findViewById(R.id.addContactFAB);
         callNotification = findViewById(R.id.callNotification);
-        searchBar = findViewById(R.id.searchBar);
         rejectBtn = findViewById(R.id.rejectBtn);
         answerBtn = findViewById(R.id.answerBtn);
         incomingCallTxt = findViewById(R.id.incomingCallTxt);
 
         userUID = FirebaseAuth.getInstance().getUid();
+        myVib = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 
         loadContacts();
-
-        myVib = (Vibrator) getSystemService(VIBRATOR_SERVICE);
         monitorCalls();
 
+
         rejectBtn.setOnClickListener(v -> {
-            firebaseRef.document(userUID).update("incoming", "");
+            ref.child(userUID).child(Constants.INCOMING_FIELD).setValue("");
             callNotification.setVisibility(View.GONE);
             myVib.cancel();
         });
 
         answerBtn.setOnClickListener(v -> {
-            ref.child(userUID).child("incoming").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    Intent intent = new Intent(ContactsActivity.this, VoiceCallActivity.class);
-                    intent.putExtra("friendUID", snapshot.getValue().toString());
-                    startActivity(intent);
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
+            Intent intent = new Intent(ContactsActivity.this, VoiceCallActivity.class);
+            intent.putExtra("friendUID", incomingUid);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP| Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         });
 
         logOutButton.setOnClickListener(e -> {
@@ -114,42 +105,18 @@ public class ContactsActivity extends AppCompatActivity {
             startActivityForResult(new Intent(ContactsActivity.this, AddContactActivity.class), RESULT_OK);
             finish();
         });
-
-        searchBar.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                filter(searchBar.getText().toString());
-            }
-        });
-    }
-
-    private void filter(String text) {
-        ArrayList<String> filterdNames = new ArrayList<>();
-        for (String s : friends) {
-            if (s.toLowerCase().contains(text.toLowerCase())) {
-                filterdNames.add(s);
-            }
-        }
-        adapter.filterList(filterdNames);
     }
 
     private void monitorCalls(){
-        ref.child(FirebaseAuth.getInstance().getUid()).child("incoming").addValueEventListener(new ValueEventListener() {
+        ref.child(FirebaseAuth.getInstance().getUid()).child(Constants.INCOMING_FIELD).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String value = snapshot.getValue(String.class);
                 assert value != null;
                 if (!value.equals("")){
                     callNotification.setVisibility(View.VISIBLE);
-                    getCallerUsername(value, "video");
+                    getCallerUsername(value, Constants.VIDEO_TYPE);
+                    incomingUid = value;
                 } else {
                     callNotification.setVisibility(View.GONE);
                 }
@@ -161,14 +128,14 @@ public class ContactsActivity extends AppCompatActivity {
             }
         });
 
-        ref.child(FirebaseAuth.getInstance().getUid()).child("incomingVoice").addValueEventListener(new ValueEventListener() {
+        ref.child(FirebaseAuth.getInstance().getUid()).child(Constants.INCOMING_VOICE_FIELD).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String value = snapshot.getValue(String.class);
                 assert value != null;
                 if (!value.equals("")){
                     callNotification.setVisibility(View.VISIBLE);
-                    getCallerUsername(value, "voice");
+                    getCallerUsername(value, Constants.VOICE_TYPE);
                 } else {
                     callNotification.setVisibility(View.GONE);
                 }
