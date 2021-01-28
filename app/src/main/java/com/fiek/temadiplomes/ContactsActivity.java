@@ -24,6 +24,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
@@ -54,6 +59,9 @@ public class ContactsActivity extends AppCompatActivity {
     private Vibrator myVib;
     private TextView incomingCallTxt;
 
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private DatabaseReference ref = database.getReference();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,13 +90,17 @@ public class ContactsActivity extends AppCompatActivity {
         });
 
         answerBtn.setOnClickListener(v -> {
-            firebaseRef.document(userUID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            ref.child(userUID).child("incoming").addValueEventListener(new ValueEventListener() {
                 @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
                     Intent intent = new Intent(ContactsActivity.this, VoiceCallActivity.class);
-                    intent.putExtra("friendUID", documentSnapshot.get("incoming").toString());
+                    intent.putExtra("friendUID", snapshot.getValue().toString());
                     startActivity(intent);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
                 }
             });
         });
@@ -130,29 +142,57 @@ public class ContactsActivity extends AppCompatActivity {
     }
 
     private void monitorCalls(){
-        firebaseRef.document(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
-                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                        assert value != null;
-                        String incoming = value.get("incoming").toString();
-                        if(!incoming.equals("")){
-                            callNotification.setVisibility(View.VISIBLE);
-                            getCallerUsername(incoming);
-                        }
-                    }
-                });
+        ref.child(FirebaseAuth.getInstance().getUid()).child("incoming").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String value = snapshot.getValue(String.class);
+                assert value != null;
+                if (!value.equals("")){
+                    callNotification.setVisibility(View.VISIBLE);
+                    getCallerUsername(value, "video");
+                } else {
+                    callNotification.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        ref.child(FirebaseAuth.getInstance().getUid()).child("incomingVoice").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String value = snapshot.getValue(String.class);
+                assert value != null;
+                if (!value.equals("")){
+                    callNotification.setVisibility(View.VISIBLE);
+                    getCallerUsername(value, "voice");
+                } else {
+                    callNotification.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
-    private void getCallerUsername(String uid){
-        firebaseRef.document(uid).get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        String username = documentSnapshot.getString("username");
-                        incomingCallTxt.setText(username + " is calling you");
-                    }
-                })
-                .addOnFailureListener(e -> Toast.makeText(ContactsActivity.this, "Error!", Toast.LENGTH_SHORT).show());
+    private void getCallerUsername(String uid, String type){
+        ref.child(uid).child("username").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                incomingCallTxt.setText(snapshot.getValue().toString() + " is calling you. (" + type + ")");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     public RecyclerView contactsRecyclerView;

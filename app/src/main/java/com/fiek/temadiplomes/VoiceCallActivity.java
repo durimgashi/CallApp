@@ -1,5 +1,6 @@
 package com.fiek.temadiplomes;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,10 +15,16 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fiek.temadiplomes.Interfaces.JavaScriptInterface;
 import com.fiek.temadiplomes.Interfaces.VoiceCallInterface;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -35,6 +42,9 @@ public class VoiceCallActivity extends AppCompatActivity {
     private String friendUID, userUID;
     private TextView endCall;
 
+    private final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private final DatabaseReference ref = database.getReference();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +61,6 @@ public class VoiceCallActivity extends AppCompatActivity {
         userUID = FirebaseAuth.getInstance().getUid();
         friendUID = getIntent().getStringExtra("friendUID");
 
-        //Toast.makeText(VideoCallActivity.this, userUID + " ///" + friendUID, Toast.LENGTH_LONG).show();
         sendCallRequest();
 
         setupWebView();
@@ -81,7 +90,8 @@ public class VoiceCallActivity extends AppCompatActivity {
 //            Toast.makeText(VideoCallActivity.this, "Not connected!", Toast.LENGTH_SHORT).show();
 //            return;
 //        }
-        firebaseRef.document(friendUID).update("incoming", userUID);
+        Toast.makeText(VoiceCallActivity.this, friendUID, Toast.LENGTH_LONG).show();
+        ref.child(friendUID).child("incoming").setValue(userUID);
 
         listenForConnectionId();
     }
@@ -91,20 +101,40 @@ public class VoiceCallActivity extends AppCompatActivity {
     }
 
     private void monitorCallAnswer(){
-        firebaseRef.document(Objects.requireNonNull(friendUID))
-                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                        assert value != null;
-                        String incoming = value.get("incoming").toString();
-                        if(incoming.equalsIgnoreCase("")){
-                            endItAll();
-                        }
-                    }
-                });
+        ref.child(userUID).child("incoming").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.getValue().equals(friendUID)){
+                    Toast.makeText(VoiceCallActivity.this, "Timer starts here", Toast.LENGTH_LONG).show();
+                    ref.removeEventListener(this);
+                    startCheckingForEnd();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
-    //    @SuppressLint("SetJavaScriptEnabled")
+    private void startCheckingForEnd(){
+        ref.child(friendUID).child("incoming").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!snapshot.getValue().equals(userUID)){
+                    Toast.makeText(VoiceCallActivity.this, "Call has ended!", Toast.LENGTH_LONG).show();
+                    ref.removeEventListener(this);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     private void setupWebView(){
         webView.setWebChromeClient(new WebChromeClient(){
             @Override
@@ -136,18 +166,6 @@ public class VoiceCallActivity extends AppCompatActivity {
 
     public void initializePeer(){
         callJavaScriptFunction("javascript:init('" + userUID + "')");
-
-        firebaseRef.document(userUID)
-                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                        assert value != null;
-                        String incoming = value.get("incoming").toString();
-                        if(!incoming.equals("")){
-//                        Toast.makeText(VideoCallActivity.this, incoming + " is calling you", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
     }
 
     private void callJavaScriptFunction(String functionString){
@@ -166,8 +184,8 @@ public class VoiceCallActivity extends AppCompatActivity {
 
     public void endItAll(){
         webView.loadUrl("");
-        firebaseRef.document(userUID).update("incoming", "");
-        firebaseRef.document(friendUID).update("incoming", "");
+        ref.child(userUID).child("incoming").setValue("");
+        ref.child(friendUID).child("incoming").setValue("");
         startActivity(new Intent(VoiceCallActivity.this, ContactsActivity.class));
     }
 }

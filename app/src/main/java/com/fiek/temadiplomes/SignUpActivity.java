@@ -18,19 +18,23 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity {
     private EditText emailReg, usernameReg, passwordReg;
     private Button btnSignUp;
     private FirebaseAuth firebaseAuth;
-    private int RC_SIGN_IN = 1;
     private FirebaseFirestore db;
     private String userId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +76,7 @@ public class SignUpActivity extends AppCompatActivity {
                             if (task.isSuccessful()){
                                 //Saving user to collection
                                 userId = firebaseAuth.getCurrentUser().getUid();
-                                User user = new User(firebaseAuth.getCurrentUser().getEmail(), username, null, false);
+                                User user = new User(firebaseAuth.getCurrentUser().getEmail(), username,null, false, "");
                                 saveUserToFirestore(user, userId);
 
                                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -94,5 +98,12 @@ public class SignUpActivity extends AppCompatActivity {
                 Toast.makeText(SignUpActivity.this, "User created", Toast.LENGTH_SHORT).show();
             }
         });
+
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference();
+
+        ref.child(userId).setValue(user);
+
     }
 }

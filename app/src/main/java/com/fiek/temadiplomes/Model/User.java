@@ -7,16 +7,26 @@ public class User {
     private String username;
     private List<String> friends;
     private Boolean available;
+    private String incoming;
 
     public User(){
 
     }
 
-    public User(String email, String username, List<String> friends, Boolean available) {
+    public User(String email, String username, List<String> friends, Boolean available, String incoming) {
         this.email = email;
         this.username = username;
         this.friends = friends;
         this.available = available;
+        this.incoming = incoming;
+    }
+
+    public String getIncoming() {
+        return incoming;
+    }
+
+    public void setIncoming(String incoming) {
+        this.incoming = incoming;
     }
 
     public Boolean getAvailable() {
