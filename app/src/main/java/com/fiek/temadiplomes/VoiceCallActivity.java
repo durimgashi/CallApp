@@ -176,11 +176,11 @@ public class VoiceCallActivity extends AppCompatActivity {
         isPeerConnencted = true;
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        endItAll();
-    }
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        endItAll();
+//    }
 
     public void endItAll(){
         webView.loadUrl("");
