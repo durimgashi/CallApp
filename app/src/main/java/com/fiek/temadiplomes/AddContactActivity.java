@@ -19,6 +19,11 @@ import com.fiek.temadiplomes.Adapters.NewContactAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -37,6 +42,8 @@ public class AddContactActivity extends AppCompatActivity {
     private EditText searchBar;
     private Button filterBtn;
     private String currUserEmail;
+    private final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private final DatabaseReference ref = database.getReference();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,55 +55,76 @@ public class AddContactActivity extends AppCompatActivity {
 
 
         currUserEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        Toast.makeText(AddContactActivity.this, "" + currUserEmail, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(AddContactActivity.this, "" + currUserEmail, Toast.LENGTH_SHORT).show();
 
-        searchBar.addTextChangedListener(new TextWatcher() {
+        loadContacts("");
 
-            @Override
-            public void afterTextChanged(Editable s) {}
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(s.length() != 0)
-                    loadContacts(s.toString());
-                else
-                    loadContacts("");
-            }
-        });
+//        searchBar.addTextChangedListener(new TextWatcher() {
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {}
+//
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                if(s.length() != 0)
+//                    loadContacts(s.toString());
+//                else
+//                    loadContacts("");
+//            }
+//        });
     }
 
     private void loadContacts(String keyword) {
         RecyclerView contactsRecyclerView = findViewById(R.id.contactsRecyclerView);
-        Query docRef;
-        if (keyword.equals("")){
-//            docRef = FirebaseFirestore.getInstance().collection("users").whereNotEqualTo("email", currUserEmail);
-            docRef = FirebaseFirestore.getInstance().collection("users").whereNotEqualTo("email", currUserEmail);
-        } else {
-            docRef = FirebaseFirestore.getInstance().collection("users")
-                    .whereGreaterThanOrEqualTo("username", keyword)
-                    .whereLessThanOrEqualTo("username", keyword + "z")
-                    .whereNotEqualTo("email", currUserEmail);
-        }
-        docRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+
+        ref.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    List<String> list = new ArrayList<>();
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        list.add(document.getId());
-                    }
-                    contactsRecyclerView.setLayoutManager(new LinearLayoutManager(AddContactActivity.this));
-                    adapter = new NewContactAdapter(AddContactActivity.this, list);
-                    contactsRecyclerView.setAdapter(adapter);
-                } else {
-                    Toast.makeText(AddContactActivity.this, "Could not get users!", Toast.LENGTH_SHORT).show();
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<String> users = new ArrayList<>();
+                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                    users.add(postSnapshot.getKey());
                 }
+                contactsRecyclerView.setLayoutManager(new LinearLayoutManager(AddContactActivity.this));
+                adapter = new NewContactAdapter(AddContactActivity.this, users);
+                contactsRecyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
+
+//        Query docRef;
+//        if (keyword.equals("")){
+////            docRef = FirebaseFirestore.getInstance().collection("users").whereNotEqualTo("email", currUserEmail);
+//            docRef = FirebaseFirestore.getInstance().collection("users").whereNotEqualTo("email", currUserEmail);
+//        } else {
+//            docRef = FirebaseFirestore.getInstance().collection("users")
+//                    .whereGreaterThanOrEqualTo("username", keyword)
+//                    .whereLessThanOrEqualTo("username", keyword + "z")
+//                    .whereNotEqualTo("email", currUserEmail);
+//        }
+//        docRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    List<String> list = new ArrayList<>();
+//                    for (QueryDocumentSnapshot document : task.getResult()) {
+//                        list.add(document.getId());
+//                    }
+//                    contactsRecyclerView.setLayoutManager(new LinearLayoutManager(AddContactActivity.this));
+//                    adapter = new NewContactAdapter(AddContactActivity.this, list);
+//                    contactsRecyclerView.setAdapter(adapter);
+//                } else {
+//                    Toast.makeText(AddContactActivity.this, "Could not get users!", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
     }
 
     @Override
