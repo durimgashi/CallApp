@@ -3,10 +3,7 @@ package com.fiek.temadiplomes;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,31 +16,20 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fiek.temadiplomes.Adapters.ContactAdapter;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class ContactsActivity extends AppCompatActivity {
 
@@ -52,17 +38,13 @@ public class ContactsActivity extends AppCompatActivity {
     private String userUID;
     private TextView logOutButton;
     private FloatingActionButton addContactFAB;
-    private CollectionReference firebaseRef = FirebaseFirestore.getInstance().collection("users");
-    private RelativeLayout callNotification;
-    private ImageView rejectBtn, answerBtn;
+    private RelativeLayout voiceCallNotification, videoCallNotification;
+    private ImageView rejectVoiceBtn, answerVoiceBtn, rejectVideoBtn, answerVideoBtn;
     private Vibrator myVib;
-    private TextView incomingCallTxt;
-
+    private TextView incomingVoiceCallTxt, incomingVideoCallTxt;
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference ref = database.getReference();
-
-    private String incomingUid;
-
+    private String incomingVoiceUID, incomingVideoUID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,10 +53,15 @@ public class ContactsActivity extends AppCompatActivity {
 
         logOutButton = findViewById(R.id.logOutButton);
         addContactFAB = findViewById(R.id.addContactFAB);
-        callNotification = findViewById(R.id.callNotification);
-        rejectBtn = findViewById(R.id.rejectBtn);
-        answerBtn = findViewById(R.id.answerBtn);
-        incomingCallTxt = findViewById(R.id.incomingCallTxt);
+        voiceCallNotification = findViewById(R.id.voiceCallNotification);
+        videoCallNotification = findViewById(R.id.videoCallNotification);
+        rejectVoiceBtn = findViewById(R.id.rejectVoiceBtn);
+        answerVoiceBtn = findViewById(R.id.answerVoiceBtn);
+        rejectVideoBtn = findViewById(R.id.rejectVideoBtn);
+        answerVideoBtn = findViewById(R.id.answerVideoBtn);
+
+        incomingVoiceCallTxt = findViewById(R.id.incomingVoiceCallTxt);
+        incomingVideoCallTxt = findViewById(R.id.incomingVideoCallTxt);
 
         userUID = FirebaseAuth.getInstance().getUid();
         myVib = (Vibrator) getSystemService(VIBRATOR_SERVICE);
@@ -82,16 +69,28 @@ public class ContactsActivity extends AppCompatActivity {
         loadContacts();
         monitorCalls();
 
-
-        rejectBtn.setOnClickListener(v -> {
-            ref.child(userUID).child(Constants.INCOMING_FIELD).setValue("");
-            callNotification.setVisibility(View.GONE);
+        rejectVoiceBtn.setOnClickListener(v -> {
+            ref.child(userUID).child(Constants.INCOMING_VOICE_FIELD).setValue("");
+            voiceCallNotification.setVisibility(View.GONE);
             myVib.cancel();
         });
 
-        answerBtn.setOnClickListener(v -> {
+        answerVoiceBtn.setOnClickListener(v -> {
             Intent intent = new Intent(ContactsActivity.this, VoiceCallActivity.class);
-            intent.putExtra("friendUID", incomingUid);
+            intent.putExtra("friendUID", incomingVoiceUID);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP| Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        });
+
+        rejectVideoBtn.setOnClickListener(v -> {
+            ref.child(userUID).child(Constants.INCOMING_VIDEO_FIELD).setValue("");
+            voiceCallNotification.setVisibility(View.GONE);
+            myVib.cancel();
+        });
+
+        answerVideoBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(ContactsActivity.this, VideoCallActivity.class);
+            intent.putExtra("friendUID", incomingVideoUID);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP| Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         });
@@ -108,37 +107,118 @@ public class ContactsActivity extends AppCompatActivity {
     }
 
     private void monitorCalls(){
-        ref.child(FirebaseAuth.getInstance().getUid()).child(Constants.INCOMING_FIELD).addValueEventListener(new ValueEventListener() {
+//        ref.child(FirebaseAuth.getInstance().getUid()).child(Constants.INCOMING_VOICE_FIELD).addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                String value = snapshot.getValue(String.class);
+//                //assert value != null;
+//                if (!value.equals("")){
+//                    voiceCallNotification.setVisibility(View.VISIBLE);
+//                    getCallerUsername(value, Constants.VOICE_TYPE);
+//                    incomingVoiceUID = value;
+//                }
+//                if (value.equals("")){
+//                    voiceCallNotification.setVisibility(View.GONE);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+
+//        ref.child(FirebaseAuth.getInstance().getUid()).addChildEventListener(new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//
+//            }
+//
+//            @Override
+//            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//                if (!snapshot.getValue().equals("")){
+//                    voiceCallNotification.setVisibility(View.VISIBLE);
+//                    getCallerUsername(snapshot.getValue().toString(), Constants.VOICE_TYPE);
+//                    incomingVoiceUID = snapshot.getValue().toString();
+//                } else if (snapshot.getValue().toString().equals("")){
+//                    voiceCallNotification.setVisibility(View.GONE);
+//                }
+//            }
+//
+//            @Override
+//            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+//
+//            }
+//
+//            @Override
+//            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+
+//        ref.child(FirebaseAuth.getInstance().getUid()).child(Constants.INCOMING_VIDEO_FIELD).addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                String value = snapshot.getValue(String.class);
+//                //assert value != null;
+//                if (!value.equals("")){
+//                    videoCallNotification.setVisibility(View.VISIBLE);
+//                    getCallerUsername(value, Constants.VIDEO_TYPE);
+//                    incomingVideoUID = value;
+//                }
+//                if (value.equals("")){
+//                    videoCallNotification.setVisibility(View.GONE);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+
+        //He is the chosen one, Obi-Wan
+        ref.child(FirebaseAuth.getInstance().getUid()).addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String value = snapshot.getValue(String.class);
-                assert value != null;
-                if (!value.equals("")){
-                    callNotification.setVisibility(View.VISIBLE);
-                    getCallerUsername(value, Constants.VIDEO_TYPE);
-                    incomingUid = value;
-                } else {
-                    callNotification.setVisibility(View.GONE);
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Toast.makeText(ContactsActivity.this, "Field: " + snapshot.getKey(), Toast.LENGTH_SHORT).show();
+                if (snapshot.getKey().equals(Constants.INCOMING_VIDEO_FIELD)){
+                    if (!snapshot.getValue().equals("")){
+                        videoCallNotification.setVisibility(View.VISIBLE);
+                        getCallerUsername(snapshot.getValue().toString(), Constants.VIDEO_TYPE);
+                        incomingVideoUID = snapshot.getValue().toString();
+                    } else if (snapshot.getValue().toString().equals("")){
+                        videoCallNotification.setVisibility(View.GONE);
+                    }
+                } else if(snapshot.getKey().equals(Constants.INCOMING_VOICE_FIELD)){
+                    if (!snapshot.getValue().equals("")){
+                        voiceCallNotification.setVisibility(View.VISIBLE);
+                        getCallerUsername(snapshot.getValue().toString(), Constants.VOICE_TYPE);
+                        incomingVoiceUID = snapshot.getValue().toString();
+                    } else if (snapshot.getValue().toString().equals("")){
+                        voiceCallNotification.setVisibility(View.GONE);
+                    }
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
 
             }
-        });
 
-        ref.child(FirebaseAuth.getInstance().getUid()).child(Constants.INCOMING_VOICE_FIELD).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String value = snapshot.getValue(String.class);
-                assert value != null;
-                if (!value.equals("")){
-                    callNotification.setVisibility(View.VISIBLE);
-                    getCallerUsername(value, Constants.VOICE_TYPE);
-                } else {
-                    callNotification.setVisibility(View.GONE);
-                }
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
             }
 
             @Override
@@ -152,7 +232,10 @@ public class ContactsActivity extends AppCompatActivity {
         ref.child(uid).child("username").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                incomingCallTxt.setText(snapshot.getValue().toString() + " is calling you. (" + type + ")");
+                if (type.equals(Constants.VOICE_TYPE))
+                    incomingVoiceCallTxt.setText(snapshot.getValue().toString() + " is calling you... (" + type + ")");
+                else if(type.equals(Constants.VIDEO_TYPE))
+                    incomingVideoCallTxt.setText(snapshot.getValue().toString() + " is calling you... (" + type + ")");
             }
 
             @Override

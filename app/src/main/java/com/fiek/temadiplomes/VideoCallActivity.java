@@ -1,40 +1,39 @@
 package com.fiek.temadiplomes;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Vibrator;
+import android.os.SystemClock;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.PermissionRequest;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.fiek.temadiplomes.Interfaces.JavaScriptInterface;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-
-import java.util.Objects;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class VideoCallActivity extends AppCompatActivity {
-
     private WebView webView;
     private Boolean isPeerConnencted = false;
-    private CollectionReference firebaseRef = FirebaseFirestore.getInstance().collection("users");
     private Boolean isAudio = true;
     private Boolean isVideo = true;
     private String friendUID, userUID;
     private TextView endCall;
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private DatabaseReference ref = database.getReference();
+    private Chronometer simpleChronometer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,63 +44,78 @@ public class VideoCallActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
         );
 
+        simpleChronometer = findViewById(R.id.counter);
         webView = findViewById(R.id.videocallWV);
         endCall = findViewById(R.id.endCall);
 
         userUID = FirebaseAuth.getInstance().getUid();
         friendUID = getIntent().getStringExtra("friendUID");
 
-        //Toast.makeText(VideoCallActivity.this, userUID + " ///" + friendUID, Toast.LENGTH_LONG).show();
-        sendCallRequest();
+        if (!friendUID.equals("") || friendUID != null || friendUID.length() < 5){
+            sendCallRequest();
+            setupWebView();
+        }
 
-        setupWebView();
-        monitorCallAnswer();
-
-        endCall.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                endItAll();
-                finish();
-            }
+        endCall.setOnClickListener(v -> {
+            endItAll();
         });
     }
 
     private void sendCallRequest() {
-//        if (!isPeerConnencted){
-//            Toast.makeText(VideoCallActivity.this, "Not connected!", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-        firebaseRef.document(friendUID).update("incoming", userUID);
-        
+        ref.child(friendUID).child(Constants.INCOMING_VIDEO_FIELD).setValue(userUID);
         listenForConnectionId();
     }
 
     private void listenForConnectionId() {
         callJavaScriptFunction("javascript:startCall('" + friendUID + "')");
+        monitorCallAnswer();
+        startCheckingForEnd();
     }
 
     private void monitorCallAnswer(){
-        firebaseRef.document(Objects.requireNonNull(friendUID))
-                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                        assert value != null;
-                        String incoming = value.get("incoming").toString();
-                        if(incoming.equals("")){
-                            endItAll();
-                        }
-                    }
-                });
+        ref.child(userUID).child(Constants.INCOMING_VIDEO_FIELD).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.getValue().equals(friendUID)){
+                    findViewById(R.id.textToCounter).setVisibility(View.INVISIBLE);
+                    simpleChronometer.setVisibility(View.VISIBLE);
+                    simpleChronometer.setBase(SystemClock.elapsedRealtime());
+                    simpleChronometer.start();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
-//    @SuppressLint("SetJavaScriptEnabled")
+    private void startCheckingForEnd(){
+        ref.child(friendUID).child(Constants.INCOMING_VIDEO_FIELD).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!snapshot.getValue().equals(userUID)){
+//                    Toast.makeText(VideoCallActivity.this, "Call has ended!", Toast.LENGTH_LONG).show();
+                    ref.removeEventListener(this);
+                    endItAll();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
     private void setupWebView(){
         webView.setWebChromeClient(new WebChromeClient(){
             @Override
             public void onPermissionRequest(PermissionRequest request) {
-               if (request != null) {
+                if (request != null) {
                     request.grant(request.getResources());
-               }
+                }
             }
         });
 
@@ -126,18 +140,6 @@ public class VideoCallActivity extends AppCompatActivity {
 
     public void initializePeer(){
         callJavaScriptFunction("javascript:init('" + userUID + "')");
-
-        firebaseRef.document(userUID)
-            .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                @Override
-                public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                    assert value != null;
-                    String incoming = value.get("incoming").toString();
-                    if(!incoming.equalsIgnoreCase("")){
-//                        Toast.makeText(VideoCallActivity.this, incoming + " is calling you", Toast.LENGTH_LONG).show();
-                    }
-                }
-        });
     }
 
     private void callJavaScriptFunction(String functionString){
@@ -148,16 +150,13 @@ public class VideoCallActivity extends AppCompatActivity {
         isPeerConnencted = true;
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        endItAll();
-    }
-
     public void endItAll(){
-        webView.loadUrl("");
-        firebaseRef.document(userUID).update("incoming", "");
-        firebaseRef.document(friendUID).update("incoming", "");
-        startActivity(new Intent(VideoCallActivity.this, ContactsActivity.class));
+        webView.loadUrl("about:blank");
+        Intent intent = new Intent(VideoCallActivity.this, ContactsActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        ref.child(FirebaseAuth.getInstance().getUid()).child(Constants.INCOMING_VIDEO_FIELD).setValue("");
+        ref.child(friendUID).child(Constants.INCOMING_VIDEO_FIELD).setValue("");
+        finish();
     }
 }

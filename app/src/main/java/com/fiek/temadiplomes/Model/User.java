@@ -7,26 +7,36 @@ public class User {
     private String username;
     private List<String> friends;
     private Boolean available;
-    private String incoming;
+    private String incomingVoice;
+    private String incomingVideo;
 
     public User(){
 
     }
 
-    public User(String email, String username, List<String> friends, Boolean available, String incoming) {
+    public String getIncomingVoice() {
+        return incomingVoice;
+    }
+
+    public void setIncomingVoice(String incomingVoice) {
+        this.incomingVoice = incomingVoice;
+    }
+
+    public String getIncomingVideo() {
+        return incomingVideo;
+    }
+
+    public void setIncomingVideo(String incomingVideo) {
+        this.incomingVideo = incomingVideo;
+    }
+
+    public User(String email, String username, List<String> friends, Boolean available, String incomingVoice, String incomingVideo) {
         this.email = email;
         this.username = username;
         this.friends = friends;
         this.available = available;
-        this.incoming = incoming;
-    }
-
-    public String getIncoming() {
-        return incoming;
-    }
-
-    public void setIncoming(String incoming) {
-        this.incoming = incoming;
+        this.incomingVoice = incomingVoice;
+        this.incomingVideo = incomingVideo;
     }
 
     public Boolean getAvailable() {

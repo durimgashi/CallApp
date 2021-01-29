@@ -12,7 +12,7 @@
         android:layout_height="80dp"
         android:background="#FFF"
         android:visibility="gone"
-        android:id="@+id/callNotification">
+        android:id="@+id/voiceCallNotification">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -22,19 +22,55 @@
             android:textColor="#000"
             android:textSize="15sp"
             android:gravity="center"
-            android:id="@+id/incomingCallTxt"
+            android:id="@+id/incomingVoiceCallTxt"
             tools:ignore="RelativeOverlap" />
         <ImageView
-            android:id="@+id/answerBtn"
+            android:id="@+id/answerVoiceBtn"
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:src="@drawable/answercall"
-            android:layout_toStartOf="@+id/rejectBtn"
+            android:layout_toStartOf="@+id/rejectVoiceBtn"
             android:padding="2dp"
             android:layout_marginHorizontal="10dp"/>
 
         <ImageView
-            android:id="@+id/rejectBtn"
+            android:id="@+id/rejectVoiceBtn"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/endcall"
+            android:layout_alignParentEnd="true"
+            android:padding="2dp"
+            android:layout_marginHorizontal="10dp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="#FFF"
+        android:visibility="gone"
+        android:id="@+id/videoCallNotification">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/someone_is_calling"
+            android:padding="20dp"
+            android:fontFamily="@font/montserratlightttf"
+            android:textColor="#000"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:id="@+id/incomingVideoCallTxt"
+            tools:ignore="RelativeOverlap" />
+        <ImageView
+            android:id="@+id/answerVideoBtn"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/answercall"
+            android:layout_toStartOf="@+id/rejectVideoBtn"
+            android:padding="2dp"
+            android:layout_marginHorizontal="10dp"/>
+
+        <ImageView
+            android:id="@+id/rejectVideoBtn"
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:src="@drawable/endcall"
