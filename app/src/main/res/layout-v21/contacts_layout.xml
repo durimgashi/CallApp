@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ContactsActivity">
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="80dp"
@@ -128,7 +127,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="600dp"
         android:id="@+id/contactsRecyclerView"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

@@ -34,7 +34,6 @@ import java.util.Map;
 public class ContactsActivity extends AppCompatActivity {
 
     private ContactAdapter adapter;
-    private List<String> friends =  new ArrayList<>();
     private String userUID;
     private TextView logOutButton;
     private FloatingActionButton addContactFAB;
@@ -59,7 +58,6 @@ public class ContactsActivity extends AppCompatActivity {
         answerVoiceBtn = findViewById(R.id.answerVoiceBtn);
         rejectVideoBtn = findViewById(R.id.rejectVideoBtn);
         answerVideoBtn = findViewById(R.id.answerVideoBtn);
-
         incomingVoiceCallTxt = findViewById(R.id.incomingVoiceCallTxt);
         incomingVideoCallTxt = findViewById(R.id.incomingVideoCallTxt);
 
@@ -135,9 +133,6 @@ public class ContactsActivity extends AppCompatActivity {
                         voiceCallNotification.setVisibility(View.GONE);
                     }
                 }
-//                else if(snapshot.getKey().equals(Constants.AVAILABLE_FIELD)){
-//                    loadContacts();
-//                }
             }
 
             @Override

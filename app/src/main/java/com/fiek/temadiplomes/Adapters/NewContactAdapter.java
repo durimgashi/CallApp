@@ -1,6 +1,7 @@
 package com.fiek.temadiplomes.Adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,10 +61,6 @@ public class NewContactAdapter extends RecyclerView.Adapter<NewContactAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull NewContactAdapter.ViewHolder holder, int position) {
         Uid.add(mData.get(position));
-
-
-//        Toast.makeText(mContext, mData.get(position), Toast.LENGTH_SHORT).show();
-//
         ref.child(mData.get(position)).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -100,20 +97,12 @@ public class NewContactAdapter extends RecyclerView.Adapter<NewContactAdapter.Vi
             addIcon = itemView.findViewById(R.id.addIcon);
             itemView.setOnClickListener(this);
 
-//            addIcon.setOnClickListener(v -> firebaseRef.document().update("incoming", ""));
             addIcon.setOnClickListener(v -> {
-                ref.child(FirebaseAuth.getInstance().getUid()).child(Constants.FRIENDS_FILED).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        ref.child(FirebaseAuth.getInstance().getUid()).child(Constants.FRIENDS_FILED).child(UUID.randomUUID().toString()).setValue(Uid.get(getAdapterPosition()));
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-
+                try{
+                    ref.child(FirebaseAuth.getInstance().getUid()).child(Constants.FRIENDS_FILED).child(Uid.get(getAdapterPosition())).setValue(Uid.get(getAdapterPosition()));
+                } catch (Exception ex){
+                    Toast.makeText(mContext, "Error: " + ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             });
         }
 
@@ -128,7 +117,7 @@ public class NewContactAdapter extends RecyclerView.Adapter<NewContactAdapter.Vi
         return mData.get(id);
     }
 
-    void setmClickListener(NewContactAdapter.ItemClickListener itemClickListener){
+    void setOnClickListener(NewContactAdapter.ItemClickListener itemClickListener){
         this.mClickListener = itemClickListener;
     }
 
