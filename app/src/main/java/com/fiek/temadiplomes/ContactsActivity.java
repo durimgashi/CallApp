@@ -69,6 +69,8 @@ public class ContactsActivity extends AppCompatActivity {
         loadContacts();
         monitorCalls();
 
+        ref.child(userUID).child(Constants.AVAILABLE_FIELD).setValue(true);
+
         rejectVoiceBtn.setOnClickListener(v -> {
             ref.child(userUID).child(Constants.INCOMING_VOICE_FIELD).setValue("");
             voiceCallNotification.setVisibility(View.GONE);
@@ -107,81 +109,6 @@ public class ContactsActivity extends AppCompatActivity {
     }
 
     private void monitorCalls(){
-//        ref.child(FirebaseAuth.getInstance().getUid()).child(Constants.INCOMING_VOICE_FIELD).addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                String value = snapshot.getValue(String.class);
-//                //assert value != null;
-//                if (!value.equals("")){
-//                    voiceCallNotification.setVisibility(View.VISIBLE);
-//                    getCallerUsername(value, Constants.VOICE_TYPE);
-//                    incomingVoiceUID = value;
-//                }
-//                if (value.equals("")){
-//                    voiceCallNotification.setVisibility(View.GONE);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-
-//        ref.child(FirebaseAuth.getInstance().getUid()).addChildEventListener(new ChildEventListener() {
-//            @Override
-//            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-//
-//            }
-//
-//            @Override
-//            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-//                if (!snapshot.getValue().equals("")){
-//                    voiceCallNotification.setVisibility(View.VISIBLE);
-//                    getCallerUsername(snapshot.getValue().toString(), Constants.VOICE_TYPE);
-//                    incomingVoiceUID = snapshot.getValue().toString();
-//                } else if (snapshot.getValue().toString().equals("")){
-//                    voiceCallNotification.setVisibility(View.GONE);
-//                }
-//            }
-//
-//            @Override
-//            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-//
-//            }
-//
-//            @Override
-//            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-
-//        ref.child(FirebaseAuth.getInstance().getUid()).child(Constants.INCOMING_VIDEO_FIELD).addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                String value = snapshot.getValue(String.class);
-//                //assert value != null;
-//                if (!value.equals("")){
-//                    videoCallNotification.setVisibility(View.VISIBLE);
-//                    getCallerUsername(value, Constants.VIDEO_TYPE);
-//                    incomingVideoUID = value;
-//                }
-//                if (value.equals("")){
-//                    videoCallNotification.setVisibility(View.GONE);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-
         //He is the chosen one, Obi-Wan
         ref.child(FirebaseAuth.getInstance().getUid()).addChildEventListener(new ChildEventListener() {
             @Override
@@ -191,7 +118,6 @@ public class ContactsActivity extends AppCompatActivity {
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                Toast.makeText(ContactsActivity.this, "Field: " + snapshot.getKey(), Toast.LENGTH_SHORT).show();
                 if (snapshot.getKey().equals(Constants.INCOMING_VIDEO_FIELD)){
                     if (!snapshot.getValue().equals("")){
                         videoCallNotification.setVisibility(View.VISIBLE);
@@ -209,6 +135,9 @@ public class ContactsActivity extends AppCompatActivity {
                         voiceCallNotification.setVisibility(View.GONE);
                     }
                 }
+//                else if(snapshot.getKey().equals(Constants.AVAILABLE_FIELD)){
+//                    loadContacts();
+//                }
             }
 
             @Override
@@ -249,23 +178,28 @@ public class ContactsActivity extends AppCompatActivity {
 
     public void loadContacts() {
         contactsRecyclerView = findViewById(R.id.contactsRecyclerView);
-        DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(userUID);
-        docRef.get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        Map<String, Object> note = documentSnapshot.getData();
-                        assert note != null;
-                        friends = (List<String>) note.get("friends");
+        ref.child(userUID).child(Constants.FRIENDS_FILED).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<String> friends = new ArrayList<>();
+                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                    friends.add(postSnapshot.getValue().toString());
+                }
+                contactsRecyclerView.setLayoutManager(new LinearLayoutManager(ContactsActivity.this));
+                adapter = new ContactAdapter(ContactsActivity.this, friends);
+                contactsRecyclerView.setAdapter(adapter);
+            }
 
-                        if(friends != null){
-                            contactsRecyclerView.setLayoutManager(new LinearLayoutManager(ContactsActivity.this));
-                            adapter = new ContactAdapter(ContactsActivity.this, friends);
-                            contactsRecyclerView.setAdapter(adapter);
-                        }
-                    } else {
-                        Toast.makeText(ContactsActivity.this, "You might have no friends!", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(e -> Toast.makeText(ContactsActivity.this, "Error!", Toast.LENGTH_SHORT).show());
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ref.child(userUID).child(Constants.AVAILABLE_FIELD).setValue(false);
     }
 }

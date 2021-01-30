@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.fiek.temadiplomes.Constants;
 import com.fiek.temadiplomes.ContactsActivity;
 import com.fiek.temadiplomes.Model.User;
 import com.fiek.temadiplomes.R;
@@ -30,6 +31,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Random;
+import java.util.UUID;
 
 public class NewContactAdapter extends RecyclerView.Adapter<NewContactAdapter.ViewHolder>  {
     private List<String> mData;
@@ -99,8 +102,18 @@ public class NewContactAdapter extends RecyclerView.Adapter<NewContactAdapter.Vi
 
 //            addIcon.setOnClickListener(v -> firebaseRef.document().update("incoming", ""));
             addIcon.setOnClickListener(v -> {
-                firebaseRef.document(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
-                        .update("friends", FieldValue.arrayUnion(Uid.get(getAdapterPosition())));
+                ref.child(FirebaseAuth.getInstance().getUid()).child(Constants.FRIENDS_FILED).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        ref.child(FirebaseAuth.getInstance().getUid()).child(Constants.FRIENDS_FILED).child(UUID.randomUUID().toString()).setValue(Uid.get(getAdapterPosition()));
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
             });
         }
 

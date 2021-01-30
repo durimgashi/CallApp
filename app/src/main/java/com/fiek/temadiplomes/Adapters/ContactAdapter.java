@@ -2,6 +2,7 @@ package com.fiek.temadiplomes.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +10,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.fiek.temadiplomes.Constants;
+import com.fiek.temadiplomes.Model.User;
 import com.fiek.temadiplomes.R;
 import com.fiek.temadiplomes.VideoCallActivity;
 import com.fiek.temadiplomes.VoiceCallActivity;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -27,6 +36,9 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     private ItemClickListener mClickListener;
     private Context mContext;
     private List<String> Uid = new ArrayList<>();
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private DatabaseReference ref = database.getReference();
+    private User user = new User();
 
     public ContactAdapter(Context context, List<String> data) {
         this.mInflater = LayoutInflater.from(context);
@@ -44,21 +56,42 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Uid.add(mData.get(position));
-        DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(Uid.get(position));
-        docRef.get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        holder.username.setText(Objects.requireNonNull(documentSnapshot.get("username")).toString());
-                        if (Objects.requireNonNull(documentSnapshot.getBoolean("available"))){
-                            holder.callTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_available, 0, 0, 0);
-                            holder.callTime.setText(" Online");
-                        } else {
-                            holder.callTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_unavailable, 0, 0, 0);
-                            holder.callTime.setText(" Offline");
-                        }
-                    }
-                })
-                .addOnFailureListener(e -> Toast.makeText(mContext, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+        ref.child(mData.get(position)).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                user = snapshot.getValue(User.class).getUsername();
+//                Boolean available = snapshot.getValue(User.class).getAvailable();
+                holder.username.setText(snapshot.child(Constants.USERNAME_FIELD).getValue().toString());
+                if (Boolean.parseBoolean(snapshot.child(Constants.AVAILABLE_FIELD).getValue().toString())){
+                    holder.callTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_available, 0, 0, 0);
+                    holder.callTime.setText(" Online");
+                } else {
+                    holder.callTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_unavailable, 0, 0, 0);
+                    holder.callTime.setText(" Offline");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+//        DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(Uid.get(position));
+//        docRef.get()
+//                .addOnSuccessListener(documentSnapshot -> {
+//                    if (documentSnapshot.exists()) {
+//                        holder.username.setText(Objects.requireNonNull(documentSnapshot.get("username")).toString());
+//                        if (Objects.requireNonNull(documentSnapshot.getBoolean("available"))){
+//                            holder.callTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_available, 0, 0, 0);
+//                            holder.callTime.setText(" Online");
+//                        } else {
+//                            holder.callTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_unavailable, 0, 0, 0);
+//                            holder.callTime.setText(" Offline");
+//                        }
+//                    }
+//                })
+//                .addOnFailureListener(e -> Toast.makeText(mContext, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
     @Override
