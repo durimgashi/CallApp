@@ -3,6 +3,7 @@ package com.fiek.temadiplomes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
 import android.annotation.SuppressLint;
@@ -18,8 +19,10 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Chronometer;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fiek.temadiplomes.Interfaces.VoiceCallInterface;
+import com.fiek.temadiplomes.Notifications.App;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -41,6 +44,7 @@ public class VoiceCallActivity extends AppCompatActivity {
     private DatabaseReference ref = database.getReference();
     private AnimationDrawable animationDrawable;
     private Chronometer simpleChronometer;
+    private NotificationManagerCompat notificationManagerCompat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +54,9 @@ public class VoiceCallActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
         );
+
+        notificationManagerCompat = NotificationManagerCompat.from(VoiceCallActivity.this);
+        notificationManagerCompat.deleteNotificationChannel(App.CHANNEL_1_ID);
 
         simpleChronometer = findViewById(R.id.counter);
         webView = findViewById(R.id.voicecallWV);

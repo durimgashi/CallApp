@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
+        android:name=".Notifications.App"
         android:allowBackup="true"
         android:icon="@mipmap/origami"
         android:label="@string/app_name"

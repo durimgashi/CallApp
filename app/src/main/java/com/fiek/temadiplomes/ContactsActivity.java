@@ -1,5 +1,7 @@
 package com.fiek.temadiplomes;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -7,14 +9,18 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fiek.temadiplomes.Adapters.ContactAdapter;
+import com.fiek.temadiplomes.Notifications.App;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -40,11 +46,14 @@ public class ContactsActivity extends AppCompatActivity {
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference ref = database.getReference();
     private String incomingVoiceUID, incomingVideoUID;
+    private NotificationManagerCompat notificationManagerCompat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.contacts_layout);
+
+        notificationManagerCompat = NotificationManagerCompat.from(ContactsActivity.this);
 
         logOutButton = findViewById(R.id.logOutButton);
         addContactFAB = findViewById(R.id.addContactFAB);
@@ -156,6 +165,8 @@ public class ContactsActivity extends AppCompatActivity {
                     incomingVoiceCallTxt.setText(snapshot.getValue().toString() + " is calling you... (" + type + ")");
                 else if(type.equals(Constants.VIDEO_TYPE))
                     incomingVideoCallTxt.setText(snapshot.getValue().toString() + " is calling you... (" + type + ")");
+
+                sendOnChannel1(snapshot.getValue().toString() + " is calling you...", uid);
             }
 
             @Override
@@ -163,6 +174,24 @@ public class ContactsActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void sendOnChannel1(String text, String callerUid){
+        Intent answerVoiceIntent = new Intent(ContactsActivity.this, VoiceCallActivity.class);
+        answerVoiceIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        answerVoiceIntent.setAction(Intent.ACTION_ANSWER);
+        answerVoiceIntent.putExtra("friendUID", callerUid);
+        PendingIntent pendingVoiceIntent = PendingIntent.getActivity(this, 0, answerVoiceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+        Notification notification = new NotificationCompat.Builder(ContactsActivity.this, App.CHANNEL_1_ID)
+                .setSmallIcon(R.drawable.bird)
+                .setContentTitle(text)
+                .setCategory(NotificationCompat.CATEGORY_CALL)
+                .setContentIntent(pendingVoiceIntent)
+                .addAction(R.drawable.answercall, "Answer", pendingVoiceIntent)
+                .build();
+        notificationManagerCompat.notify(1, notification);
     }
 
     public RecyclerView contactsRecyclerView;
