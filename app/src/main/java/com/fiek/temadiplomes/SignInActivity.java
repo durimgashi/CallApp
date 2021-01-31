@@ -4,8 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -22,8 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.ktx.Firebase;
 import com.google.firebase.ktx.FirebaseKt;
 
-public class MainActivity extends AppCompatActivity {
-
+public class SignInActivity extends AppCompatActivity {
     private TextView signUpLink;
     private Button logInButton;
     private EditText etUsername, etPassword;
@@ -46,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
 
         if (firebaseAuth.getCurrentUser() != null){
-            Intent intent = new Intent(MainActivity.this, ContactsActivity.class);
+            Intent intent = new Intent(SignInActivity.this, ContactsActivity.class);
             intent.putExtra("username", firebaseAuth.getCurrentUser().getUid());
             startActivity(intent);
             finish();
@@ -57,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         etUsername = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
 
-        signUpLink.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, SignUpActivity.class)));
+        signUpLink.setOnClickListener(v -> startActivity(new Intent(SignInActivity.this, SignUpActivity.class)));
 
         logInButton.setOnClickListener(v -> {
             String email = etUsername.getText().toString().trim();
@@ -66,11 +63,11 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()){
-                        Intent intent = new Intent(MainActivity.this, ContactsActivity.class);
+                        Intent intent = new Intent(SignInActivity.this, ContactsActivity.class);
                         intent.putExtra("username", firebaseAuth.getCurrentUser().getUid());
                         startActivity(intent);
                     } else {
-                        Toast.makeText(MainActivity.this, "Error" + task.getException().getMessage() , Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SignInActivity.this, "Error" + task.getException().getMessage() , Toast.LENGTH_SHORT).show();
                     }
                 }
             });

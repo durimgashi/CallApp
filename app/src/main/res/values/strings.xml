@@ -18,4 +18,5 @@
     <string name="tx_available"> Available</string>
     <string name="tx_unavailable"> Unvailable</string>
     <string name="search_by_username">Search by username</string>
+    <string name="calling">Calling...</string>
 </resources>

@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:orientation="vertical"
+        android:layout_centerVertical="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -22,7 +23,6 @@
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_gravity="center"
-            android:layout_marginBottom="30dp"
             android:src="@drawable/bird" />
 
         <EditText
@@ -60,7 +60,7 @@
             android:autofillHints=""
             android:backgroundTint="@color/white"
             android:hint="Password"
-            android:imeOptions="actionNext"
+            android:imeOptions="actionDone"
             android:inputType="textPassword"
             android:fontFamily="@font/montserratlightttf"
             android:textColor="@color/white"

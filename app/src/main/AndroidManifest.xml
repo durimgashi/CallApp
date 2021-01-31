@@ -25,7 +25,7 @@
         <activity android:name=".ContactsActivity"
             android:noHistory="true"/>
         <activity android:name=".SignUpActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".SignInActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,5 +33,4 @@
             </intent-filter>
         </activity>
     </application>
-
 </manifest>

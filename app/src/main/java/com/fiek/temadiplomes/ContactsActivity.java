@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,12 +23,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ContactsActivity extends AppCompatActivity {
 
@@ -97,7 +93,7 @@ public class ContactsActivity extends AppCompatActivity {
 
         logOutButton.setOnClickListener(e -> {
             FirebaseAuth.getInstance().signOut();
-            startActivity(new Intent(ContactsActivity.this, MainActivity.class));
+            startActivity(new Intent(ContactsActivity.this, SignInActivity.class));
         });
 
         addContactFAB.setOnClickListener(v -> {
@@ -176,13 +172,22 @@ public class ContactsActivity extends AppCompatActivity {
         ref.child(userUID).child(Constants.FRIENDS_FILED).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<String> friends = new ArrayList<>();
-                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
-                    friends.add(postSnapshot.getValue().toString());
+
+                if(snapshot.hasChildren()){
+                    List<String> friends = new ArrayList<>();
+                    for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                        friends.add(postSnapshot.getValue().toString());
+                    }
+                    contactsRecyclerView.setLayoutManager(new LinearLayoutManager(ContactsActivity.this));
+                    adapter = new ContactAdapter(ContactsActivity.this, friends);
+                    contactsRecyclerView.setAdapter(adapter);
+                } else {
+//                    Toast.makeText(ContactsActivity.this, "You have no contacts", Toast.LENGTH_SHORT).show();
+                    contactsRecyclerView.setVisibility(View.GONE);
+                    findViewById(R.id.noCont).setVisibility(View.VISIBLE);
                 }
-                contactsRecyclerView.setLayoutManager(new LinearLayoutManager(ContactsActivity.this));
-                adapter = new ContactAdapter(ContactsActivity.this, friends);
-                contactsRecyclerView.setAdapter(adapter);
+
+
             }
 
             @Override

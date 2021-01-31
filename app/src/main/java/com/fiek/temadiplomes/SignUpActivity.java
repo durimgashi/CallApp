@@ -3,7 +3,6 @@ package com.fiek.temadiplomes;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -24,9 +23,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity {
     private EditText emailReg, usernameReg, passwordReg;
@@ -50,7 +47,7 @@ public class SignUpActivity extends AppCompatActivity {
         btnSignUp = findViewById(R.id.btnSignUp);
 
         TextView logInLink = findViewById(R.id.logInLink);
-        logInLink.setOnClickListener(v -> startActivity(new Intent(SignUpActivity.this, MainActivity.class)));
+        logInLink.setOnClickListener(v -> startActivity(new Intent(SignUpActivity.this, SignInActivity.class)));
 
         btnSignUp.setOnClickListener(v -> {
             final String email = emailReg.getText().toString();
@@ -81,7 +78,7 @@ public class SignUpActivity extends AppCompatActivity {
                                 User user = new User(firebaseAuth.getCurrentUser().getEmail(), username, durimDefaulltFriend, false, "", "");
                                 saveUserToFirestore(user, userId);
 
-                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
                                 intent.putExtra("username", firebaseAuth.getCurrentUser().getUid());
                                 startActivity(intent);
                             }else{
