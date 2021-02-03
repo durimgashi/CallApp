@@ -18,6 +18,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.wear.widget.CircledImageView;
 
 import com.fiek.temadiplomes.Adapters.ContactAdapter;
 import com.fiek.temadiplomes.Notifications.App;
@@ -29,6 +30,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.tapadoo.alerter.Alerter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +44,8 @@ public class ContactsActivity extends AppCompatActivity {
     private RelativeLayout voiceCallNotification, videoCallNotification;
     private ImageView rejectVoiceBtn, answerVoiceBtn, rejectVideoBtn, answerVideoBtn;
     private Vibrator myVib;
-    private TextView incomingVoiceCallTxt, incomingVideoCallTxt;
+    private TextView incomingVoiceCallTxt, incomingVideoCallTxt, usernameCurr;
+    private de.hdodenhof.circleimageview.CircleImageView userProfile;
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference ref = database.getReference();
     private String incomingVoiceUID, incomingVideoUID;
@@ -65,14 +68,19 @@ public class ContactsActivity extends AppCompatActivity {
         answerVideoBtn = findViewById(R.id.answerVideoBtn);
         incomingVoiceCallTxt = findViewById(R.id.incomingVoiceCallTxt);
         incomingVideoCallTxt = findViewById(R.id.incomingVideoCallTxt);
+        usernameCurr = findViewById(R.id.usernameCurr);
+        userProfile = findViewById(R.id.userProfile);
 
         userUID = FirebaseAuth.getInstance().getUid();
+        usernameCurr.setText("durimgashi");
+
         myVib = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 
         loadContacts();
         monitorCalls();
 
         ref.child(userUID).child(Constants.AVAILABLE_FIELD).setValue(true);
+
 
         rejectVoiceBtn.setOnClickListener(v -> {
             ref.child(userUID).child(Constants.INCOMING_VOICE_FIELD).setValue("");

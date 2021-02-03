@@ -30,6 +30,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.tapadoo.alerter.Alerter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,29 +54,7 @@ public class AddContactActivity extends AppCompatActivity {
         searchBar = findViewById(R.id.usernameAdd);
         loadContacts("");
 
-
         currUserEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-//        Toast.makeText(AddContactActivity.this, "" + currUserEmail, Toast.LENGTH_SHORT).show();
-
-        loadContacts("");
-
-//        searchBar.addTextChangedListener(new TextWatcher() {
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {}
-//
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                if(s.length() != 0)
-//                    loadContacts(s.toString());
-//                else
-//                    loadContacts("");
-//            }
-//        });
     }
 
     private void loadContacts(String keyword) {

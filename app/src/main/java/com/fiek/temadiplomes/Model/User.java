@@ -9,9 +9,28 @@ public class User {
     private Boolean available;
     private String incomingVoice;
     private String incomingVideo;
+    private String image;
 
     public User(){
 
+    }
+
+    public User(String email, String username, List<String> friends, Boolean available, String incomingVoice, String incomingVideo, String image) {
+        this.email = email;
+        this.username = username;
+        this.friends = friends;
+        this.available = available;
+        this.incomingVoice = incomingVoice;
+        this.incomingVideo = incomingVideo;
+        this.image = image;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getIncomingVoice() {
@@ -27,15 +46,6 @@ public class User {
     }
 
     public void setIncomingVideo(String incomingVideo) {
-        this.incomingVideo = incomingVideo;
-    }
-
-    public User(String email, String username, List<String> friends, Boolean available, String incomingVoice, String incomingVideo) {
-        this.email = email;
-        this.username = username;
-        this.friends = friends;
-        this.available = available;
-        this.incomingVoice = incomingVoice;
         this.incomingVideo = incomingVideo;
     }
 

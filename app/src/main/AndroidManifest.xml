@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.fiek.temadiplomes">
 
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -18,13 +19,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TemaDiplomes.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".VoiceCallActivity"
-            android:noHistory="true"/>
+        <activity
+            android:name=".VoiceCallActivity"
+            android:noHistory="true" />
         <activity android:name=".AddContactActivity" />
-        <activity android:name=".VideoCallActivity"
-            android:noHistory="true"/>
-        <activity android:name=".ContactsActivity"
-            android:noHistory="true"/>
+        <activity
+            android:name=".VideoCallActivity"
+            android:noHistory="true" />
+        <activity
+            android:name=".ContactsActivity"
+            android:noHistory="true" />
         <activity android:name=".SignUpActivity" />
         <activity android:name=".SignInActivity">
             <intent-filter>
@@ -34,4 +38,5 @@
             </intent-filter>
         </activity>
     </application>
+
 </manifest>

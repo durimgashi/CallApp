@@ -1,19 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
+<LinearLayout
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     android:layout_marginTop="5dp"
+    android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="10dp">
-        <ImageView android:id="@+id/catch_image"
-            android:layout_width="60dip"
-            android:layout_height="60dip"
-            android:contentDescription="@string/todo"
-            android:src="@drawable/contact_icon"/>
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/profile_image"
+            android:layout_width="66dp"
+            android:layout_height="66dp"
+            android:src="@drawable/grogu"
+            app:civ_border_width="0dp"
+            app:civ_border_color="#FF000000"/>
+<!--        <ImageView android:id="@+id/catch_image"-->
+<!--            android:layout_width="60dip"-->
+<!--            android:layout_height="60dip"-->
+<!--            android:contentDescription="@string/todo"-->
+<!--            android:src="@drawable/contact_icon"/>-->
         <LinearLayout
             android:layout_width="180dp"
             android:layout_height="wrap_content"
@@ -44,8 +53,13 @@
                 android:id="@+id/addIcon"
                 android:layout_marginStart="10dp"
                 android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/ic_addcontact"/>
+                android:layout_height="40dp"/>
         </RelativeLayout>
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:background="#DCDCDC"/>
+</LinearLayout>

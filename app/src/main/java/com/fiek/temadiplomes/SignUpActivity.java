@@ -32,7 +32,6 @@ public class SignUpActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private String userId;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,23 +66,25 @@ public class SignUpActivity extends AppCompatActivity {
             }
 
             firebaseAuth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()){
-                                //Saving user to collection
-                                userId = firebaseAuth.getCurrentUser().getUid();
-                                List<String> durimDefaulltFriend = new ArrayList<>();
-                                durimDefaulltFriend.add("yVln3seYb5UEqiY0VQWato2nxS02");
-                                User user = new User(firebaseAuth.getCurrentUser().getEmail(), username, durimDefaulltFriend, false, "", "");
-                                saveUserToFirestore(user, userId);
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()){
+                            userId = firebaseAuth.getCurrentUser().getUid();
+//                                List<String> durimDefaulltFriend = new ArrayList<>();
+//                                durimDefaulltFriend.add("yVln3seYb5UEqiY0VQWato2nxS02");
+                            User user = new User(firebaseAuth.getCurrentUser().getEmail(),
+                                                    username,
+                                                    null,
+                                                    false,
+                                                    "",
+                                                    "",
+                                                    "contact_icon.png");
+                            saveUserToFirestore(user, userId);
 
-                                Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
-                                intent.putExtra("username", firebaseAuth.getCurrentUser().getUid());
-                                startActivity(intent);
-                            }else{
-                                Toast.makeText(SignUpActivity.this, "Error: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                            }
+                            Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
+                            intent.putExtra("username", firebaseAuth.getCurrentUser().getUid());
+                            startActivity(intent);
+                        }else{
+                            Toast.makeText(SignUpActivity.this, "Error: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                         }
                     });
         });
@@ -91,18 +92,11 @@ public class SignUpActivity extends AppCompatActivity {
 
     public void saveUserToFirestore(User user, String userId){
         DocumentReference documentReference = db.collection("users").document(userId);
-        documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Toast.makeText(SignUpActivity.this, "User created", Toast.LENGTH_SHORT).show();
-            }
-        });
-
+        documentReference.set(user).addOnSuccessListener(aVoid -> Toast.makeText(SignUpActivity.this, "User created", Toast.LENGTH_SHORT).show());
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference();
 
         ref.child(userId).setValue(user);
-
     }
 }
