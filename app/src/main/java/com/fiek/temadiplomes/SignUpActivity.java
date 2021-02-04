@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.fiek.temadiplomes.Model.User;
+import com.fiek.temadiplomes.Utils.Constants;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -77,7 +78,7 @@ public class SignUpActivity extends AppCompatActivity {
                                                     false,
                                                     "",
                                                     "",
-                                                    "contact_icon.png");
+                                                    Constants.DEFAULT_IMAGE_TOKEN);
                             saveUserToFirestore(user, userId);
 
                             Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
