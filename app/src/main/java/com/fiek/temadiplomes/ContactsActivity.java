@@ -31,6 +31,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 import com.tapadoo.alerter.Alerter;
 
 import java.util.ArrayList;
@@ -84,10 +85,13 @@ public class ContactsActivity extends AppCompatActivity {
         ref.child(userUID).child(Constants.AVAILABLE_FIELD).setValue(true);
 
 
-        ref.child(userUID).child(Constants.USERNAME_FIELD).addValueEventListener(new ValueEventListener() {
+
+        ref.child(userUID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                usernameCurr.setText(snapshot.getValue().toString());
+                usernameCurr.setText(snapshot.child(Constants.USERNAME_FIELD).getValue().toString());
+                Picasso.get().load(snapshot.child(Constants.IMAGE_FIELD).getValue().toString()).into(userProfile);
+
             }
 
             @Override

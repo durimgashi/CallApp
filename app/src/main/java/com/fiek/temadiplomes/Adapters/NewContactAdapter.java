@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
 import com.tapadoo.alerter.Alerter;
 
 import java.util.ArrayList;
@@ -66,6 +67,8 @@ public class NewContactAdapter extends RecyclerView.Adapter<NewContactAdapter.Vi
                     holder.callTime.setText(" Offline");
                 }
 
+                Picasso.get().load(snapshot.child(Constants.IMAGE_FIELD).getValue().toString()).into(holder.profile_image);
+
                 ref.child(FirebaseAuth.getInstance().getUid()).child(Constants.FRIENDS_FILED).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -101,12 +104,14 @@ public class NewContactAdapter extends RecyclerView.Adapter<NewContactAdapter.Vi
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView username, callTime;
         ImageView addIcon;
+        de.hdodenhof.circleimageview.CircleImageView profile_image;
 
         ViewHolder(View itemView) {
             super(itemView);
             username = itemView.findViewById(R.id.username);
             callTime = itemView.findViewById(R.id.calltime);
             addIcon = itemView.findViewById(R.id.addIcon);
+            profile_image = itemView.findViewById(R.id.profile_image);
             itemView.setOnClickListener(this);
 
             addIcon.setOnClickListener(v -> {

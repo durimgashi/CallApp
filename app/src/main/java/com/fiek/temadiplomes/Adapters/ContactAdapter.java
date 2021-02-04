@@ -2,6 +2,8 @@ package com.fiek.temadiplomes.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.graphics.drawable.RoundedBitmapDrawable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fiek.temadiplomes.Utils.Constants;
@@ -21,6 +25,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,23 +53,22 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         return new ViewHolder(view);
     }
 
-    // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Uid.add(mData.get(position));
         ref.child(mData.get(position)).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                user = snapshot.getValue(User.class).getUsername();
-//                Boolean available = snapshot.getValue(User.class).getAvailable();
                 holder.username.setText(snapshot.child(Constants.USERNAME_FIELD).getValue().toString());
-                if (Boolean.parseBoolean(snapshot.child(Constants.AVAILABLE_FIELD).getValue().toString())){
+                if (Boolean.parseBoolean(snapshot.child(Constants.AVAILABLE_FIELD).getValue().toString())) {
                     holder.callTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_available, 0, 0, 0);
                     holder.callTime.setText(" Online");
                 } else {
                     holder.callTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_unavailable, 0, 0, 0);
                     holder.callTime.setText(" Offline");
                 }
+
+                Picasso.get().load(snapshot.child(Constants.IMAGE_FIELD).getValue().toString()).into(holder.profile_image);
             }
 
             @Override
@@ -71,22 +76,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
 
             }
         });
-
-//        DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(Uid.get(position));
-//        docRef.get()
-//                .addOnSuccessListener(documentSnapshot -> {
-//                    if (documentSnapshot.exists()) {
-//                        holder.username.setText(Objects.requireNonNull(documentSnapshot.get("username")).toString());
-//                        if (Objects.requireNonNull(documentSnapshot.getBoolean("available"))){
-//                            holder.callTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_available, 0, 0, 0);
-//                            holder.callTime.setText(" Online");
-//                        } else {
-//                            holder.callTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_unavailable, 0, 0, 0);
-//                            holder.callTime.setText(" Offline");
-//                        }
-//                    }
-//                })
-//                .addOnFailureListener(e -> Toast.makeText(mContext, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
     @Override
@@ -98,6 +87,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView username, callTime;
         ImageView phoneIcon, videoIcon;
+        de.hdodenhof.circleimageview.CircleImageView profile_image;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -105,18 +95,19 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
             callTime = itemView.findViewById(R.id.calltime);
             phoneIcon = itemView.findViewById(R.id.phoneIcon);
             videoIcon = itemView.findViewById(R.id.videoIcon);
+            profile_image = itemView.findViewById(R.id.profile_image);
             itemView.setOnClickListener(this);
 
             videoIcon.setOnClickListener(v -> {
                 Intent intent = new Intent(mContext, VideoCallActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP| Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.putExtra("friendUID", Uid.get(getAdapterPosition()));
                 mContext.startActivity(intent);
             });
 
             phoneIcon.setOnClickListener(v -> {
                 Intent intent = new Intent(mContext, VoiceCallActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP| Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.putExtra("friendUID", Uid.get(getAdapterPosition()));
                 mContext.startActivity(intent);
             });
