@@ -2,18 +2,16 @@ package com.fiek.temadiplomes.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.fiek.temadiplomes.Constants;
+import com.fiek.temadiplomes.Utils.Constants;
 import com.fiek.temadiplomes.Model.User;
 import com.fiek.temadiplomes.R;
 import com.fiek.temadiplomes.VideoCallActivity;
@@ -23,12 +21,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> {
     private List<String> mData;

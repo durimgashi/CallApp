@@ -7,9 +7,9 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +22,7 @@ import androidx.wear.widget.CircledImageView;
 
 import com.fiek.temadiplomes.Adapters.ContactAdapter;
 import com.fiek.temadiplomes.Notifications.App;
+import com.fiek.temadiplomes.Utils.Constants;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -50,6 +51,7 @@ public class ContactsActivity extends AppCompatActivity {
     private DatabaseReference ref = database.getReference();
     private String incomingVoiceUID, incomingVideoUID;
     private NotificationManagerCompat notificationManagerCompat;
+    private LinearLayout editLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,9 +72,9 @@ public class ContactsActivity extends AppCompatActivity {
         incomingVideoCallTxt = findViewById(R.id.incomingVideoCallTxt);
         usernameCurr = findViewById(R.id.usernameCurr);
         userProfile = findViewById(R.id.userProfile);
+        editLayout = findViewById(R.id.editLayout);
 
         userUID = FirebaseAuth.getInstance().getUid();
-        usernameCurr.setText("durimgashi");
 
         myVib = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 
@@ -81,6 +83,25 @@ public class ContactsActivity extends AppCompatActivity {
 
         ref.child(userUID).child(Constants.AVAILABLE_FIELD).setValue(true);
 
+
+        ref.child(userUID).child(Constants.USERNAME_FIELD).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                usernameCurr.setText(snapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        editLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(ContactsActivity.this, EditProfileActivity.class));
+            }
+        });
 
         rejectVoiceBtn.setOnClickListener(v -> {
             ref.child(userUID).child(Constants.INCOMING_VOICE_FIELD).setValue("");

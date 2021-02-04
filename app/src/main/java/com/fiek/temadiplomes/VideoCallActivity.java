@@ -17,6 +17,7 @@ import android.widget.Chronometer;
 import android.widget.TextView;
 
 import com.fiek.temadiplomes.Interfaces.JavaScriptInterface;
+import com.fiek.temadiplomes.Utils.Constants;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

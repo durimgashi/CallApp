@@ -19,10 +19,10 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Chronometer;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.fiek.temadiplomes.Interfaces.VoiceCallInterface;
 import com.fiek.temadiplomes.Notifications.App;
+import com.fiek.temadiplomes.Utils.Constants;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

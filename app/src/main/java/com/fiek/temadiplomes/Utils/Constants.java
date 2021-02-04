@@ -1,4 +1,4 @@
-package com.fiek.temadiplomes;
+package com.fiek.temadiplomes.Utils;
 
 public class Constants {
     public static final String VIDEO_TYPE = "video";

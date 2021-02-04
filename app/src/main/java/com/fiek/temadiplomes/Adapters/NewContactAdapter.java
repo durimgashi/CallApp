@@ -2,8 +2,6 @@ package com.fiek.temadiplomes.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.fiek.temadiplomes.AddContactActivity;
-import com.fiek.temadiplomes.Constants;
-import com.fiek.temadiplomes.ContactsActivity;
-import com.fiek.temadiplomes.Model.User;
+import com.fiek.temadiplomes.Utils.Constants;
 import com.fiek.temadiplomes.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -26,18 +21,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.tapadoo.alerter.Alerter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Random;
-import java.util.UUID;
 
 public class NewContactAdapter extends RecyclerView.Adapter<NewContactAdapter.ViewHolder>  {
     private List<String> mData;
