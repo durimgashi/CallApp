@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,8 +17,6 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.wear.widget.CircledImageView;
-
 import com.fiek.temadiplomes.Adapters.ContactAdapter;
 import com.fiek.temadiplomes.Notifications.App;
 import com.fiek.temadiplomes.Utils.Constants;
@@ -32,8 +29,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
-import com.tapadoo.alerter.Alerter;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,8 +79,6 @@ public class ContactsActivity extends AppCompatActivity {
 
         ref.child(userUID).child(Constants.AVAILABLE_FIELD).setValue(true);
 
-
-
         ref.child(userUID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -100,12 +93,7 @@ public class ContactsActivity extends AppCompatActivity {
             }
         });
 
-        editLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(ContactsActivity.this, EditProfileActivity.class));
-            }
-        });
+        editLayout.setOnClickListener(view -> startActivity(new Intent(ContactsActivity.this, EditProfileActivity.class)));
 
         rejectVoiceBtn.setOnClickListener(v -> {
             ref.child(userUID).child(Constants.INCOMING_VOICE_FIELD).setValue("");
@@ -244,12 +232,9 @@ public class ContactsActivity extends AppCompatActivity {
                     adapter = new ContactAdapter(ContactsActivity.this, friends);
                     contactsRecyclerView.setAdapter(adapter);
                 } else {
-//                    Toast.makeText(ContactsActivity.this, "You have no contacts", Toast.LENGTH_SHORT).show();
                     contactsRecyclerView.setVisibility(View.GONE);
                     findViewById(R.id.noCont).setVisibility(View.VISIBLE);
                 }
-
-
             }
 
             @Override

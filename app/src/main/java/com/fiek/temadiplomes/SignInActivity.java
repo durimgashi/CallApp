@@ -59,16 +59,13 @@ public class SignInActivity extends AppCompatActivity {
         logInButton.setOnClickListener(v -> {
             String email = etUsername.getText().toString().trim();
             String password = etPassword.getText().toString();
-            firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()){
-                        Intent intent = new Intent(SignInActivity.this, ContactsActivity.class);
-                        intent.putExtra("username", firebaseAuth.getCurrentUser().getUid());
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(SignInActivity.this, "Error" + task.getException().getMessage() , Toast.LENGTH_SHORT).show();
-                    }
+            firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+                if (task.isSuccessful()){
+                    Intent intent = new Intent(SignInActivity.this, ContactsActivity.class);
+                    intent.putExtra("username", firebaseAuth.getCurrentUser().getUid());
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(SignInActivity.this, "Error" + task.getException().getMessage() , Toast.LENGTH_SHORT).show();
                 }
             });
         });
