@@ -34,7 +34,6 @@ public class NewContactAdapter extends RecyclerView.Adapter<NewContactAdapter.Vi
     private NewContactAdapter.ItemClickListener mClickListener;
     private Context mContext;
     private List<String> Uid = new ArrayList<>();
-    private CollectionReference firebaseRef = FirebaseFirestore.getInstance().collection("users");
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference ref = database.getReference();
     private Boolean isContact;
@@ -143,7 +142,6 @@ public class NewContactAdapter extends RecyclerView.Adapter<NewContactAdapter.Vi
         }
     }
 
-    // convenience method for getting data at click position
     String getItem(int id) {
         return mData.get(id);
     }
@@ -152,7 +150,6 @@ public class NewContactAdapter extends RecyclerView.Adapter<NewContactAdapter.Vi
         this.mClickListener = itemClickListener;
     }
 
-    // parent activity will implement this method to respond to click events
     public interface ItemClickListener {
         void onItemClick(View view, int position);
     }

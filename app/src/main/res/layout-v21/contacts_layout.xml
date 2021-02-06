@@ -6,76 +6,81 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ContactsActivity">
+
     <RelativeLayout
+        android:id="@+id/voiceCallNotification"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:background="#FFF"
-        android:visibility="gone"
-        android:id="@+id/voiceCallNotification">
+        android:visibility="gone">
+
         <TextView
+            android:id="@+id/incomingVoiceCallTxt"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="@string/someone_is_calling"
-            android:padding="20dp"
             android:fontFamily="@font/montserratlightttf"
+            android:gravity="center"
+            android:padding="20dp"
+            android:text="@string/someone_is_calling"
             android:textColor="#000"
             android:textSize="15sp"
-            android:gravity="center"
-            android:id="@+id/incomingVoiceCallTxt"
             tools:ignore="RelativeOverlap" />
+
         <ImageView
             android:id="@+id/answerVoiceBtn"
             android:layout_width="50dp"
             android:layout_height="match_parent"
-            android:src="@drawable/answercall"
+            android:layout_marginHorizontal="10dp"
             android:layout_toStartOf="@+id/rejectVoiceBtn"
             android:padding="2dp"
-            android:layout_marginHorizontal="10dp"/>
+            android:src="@drawable/answercall" />
 
         <ImageView
             android:id="@+id/rejectVoiceBtn"
             android:layout_width="50dp"
             android:layout_height="match_parent"
-            android:src="@drawable/endcall"
             android:layout_alignParentEnd="true"
+            android:layout_marginHorizontal="10dp"
             android:padding="2dp"
-            android:layout_marginHorizontal="10dp"/>
+            android:src="@drawable/endcall" />
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/videoCallNotification"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:background="#FFF"
-        android:visibility="gone"
-        android:id="@+id/videoCallNotification">
+        android:visibility="gone">
+
         <TextView
+            android:id="@+id/incomingVideoCallTxt"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="@string/someone_is_calling"
-            android:padding="20dp"
             android:fontFamily="@font/montserratlightttf"
+            android:gravity="center"
+            android:padding="20dp"
+            android:text="@string/someone_is_calling"
             android:textColor="#000"
             android:textSize="15sp"
-            android:gravity="center"
-            android:id="@+id/incomingVideoCallTxt"
             tools:ignore="RelativeOverlap" />
+
         <ImageView
             android:id="@+id/answerVideoBtn"
             android:layout_width="50dp"
             android:layout_height="match_parent"
-            android:src="@drawable/answercall"
+            android:layout_marginHorizontal="10dp"
             android:layout_toStartOf="@+id/rejectVideoBtn"
             android:padding="2dp"
-            android:layout_marginHorizontal="10dp"/>
+            android:src="@drawable/answercall" />
 
         <ImageView
             android:id="@+id/rejectVideoBtn"
             android:layout_width="50dp"
             android:layout_height="match_parent"
-            android:src="@drawable/endcall"
             android:layout_alignParentEnd="true"
+            android:layout_marginHorizontal="10dp"
             android:padding="2dp"
-            android:layout_marginHorizontal="10dp"/>
+            android:src="@drawable/endcall" />
     </RelativeLayout>
 
     <androidx.appcompat.widget.Toolbar
@@ -91,86 +96,83 @@
             android:orientation="vertical">
 
             <RelativeLayout
-                android:paddingHorizontal="0dp"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
+                android:background="@color/twitterBlue"
                 android:gravity="center_vertical"
-                android:background="@color/twitterBlue">
-<!--                <TextView-->
-<!--                    android:id="@+id/edit"-->
-<!--                    android:layout_width="90dp"-->
-<!--                    android:layout_height="60dp"-->
-<!--                    android:layout_alignParentLeft="true"-->
-<!--                    android:layout_marginLeft="-1dp"-->
-<!--                    android:background="@drawable/bird2"-->
-<!--                    android:fontFamily="@font/montserratlightttf"-->
-<!--                    android:textColor="@color/white"-->
-<!--                    android:textSize="20sp" />-->
+                android:paddingHorizontal="0dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp">
+
                 <LinearLayout
                     android:id="@+id/editLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/userProfile"
                         android:layout_width="40dp"
                         android:layout_height="match_parent"
-                        android:src="@drawable/grogu"
                         app:civ_border_color="#FFFFFF"
                         app:civ_border_width="2dp" />
+
                     <TextView
                         android:id="@+id/usernameCurr"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:textColor="@color/white"
-                        android:textSize="18sp"
                         android:layout_gravity="center_vertical"
+                        android:layout_marginStart="15dp"
                         android:gravity="center_vertical"
-                        android:layout_marginStart="15dp"/>
+                        android:textColor="@color/white"
+                        android:textSize="18sp" />
                 </LinearLayout>
 
                 <TextView
                     android:id="@+id/logOutButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Log Out"
+                    android:layout_alignParentEnd="true"
                     android:layout_marginVertical="10dp"
                     android:background="@drawable/button"
-                    android:padding="10dp"
-                    android:gravity="center_vertical"
-                    android:layout_alignParentEnd="true"
-                    android:textColor="@color/white"
                     android:fontFamily="@font/montserratlightttf"
-                    android:textSize="15sp"/>
+                    android:gravity="center_vertical"
+                    android:padding="10dp"
+                    android:text="Log Out"
+                    android:textColor="@color/white"
+                    android:textSize="15sp" />
             </RelativeLayout>
         </LinearLayout>
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/contactsRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="600dp"
-        android:id="@+id/contactsRecyclerView"/>
+        android:layout_height="wrap_content" />
+
+    <FrameLayout
+        android:id="@+id/frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addContactFAB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="15dp"
+            android:contentDescription="Add Contact"
+            android:src="@drawable/ic_add"
+            tools:ignore="HardcodedText" />
+    </FrameLayout>
 
     <ImageView
-        android:visibility="gone"
+        android:id="@+id/noCont"
         android:layout_width="match_parent"
         android:layout_height="400dp"
-        android:id="@+id/noCont"
-        android:src="@drawable/nocontact">
-
-    </ImageView>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/addContactFAB"
-        android:layout_margin="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        app:layout_anchorGravity="bottom|right|end"
-        android:src="@drawable/ic_add"
-        android:clickable="true"
-        android:contentDescription="Add Contact" />
-
+        android:src="@drawable/nocontact"
+        android:visibility="gone" />
 </LinearLayout>

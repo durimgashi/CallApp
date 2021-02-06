@@ -17,6 +17,7 @@ import android.os.Handler;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.fiek.temadiplomes.Model.Upload;
@@ -91,13 +92,6 @@ public class EditProfileActivity extends AppCompatActivity {
             StorageReference fileReference = storageRef.child(System.currentTimeMillis() + "." + getFileExtention(imageUri));
 
             fileReference.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
-//                    Handler handler = new Handler();
-//                    handler.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            progressBar.setProgress(0);
-//                        }
-//                    }, 5000);
                 final UploadTask uploadTask = fileReference.putFile(imageUri);
 
                 uploadTask.continueWithTask(task -> {
@@ -110,6 +104,7 @@ public class EditProfileActivity extends AppCompatActivity {
                         Toast.makeText(EditProfileActivity.this, "Upload successful", Toast.LENGTH_SHORT).show();
                         Upload upload = new Upload(UUID.randomUUID().toString(), task.getResult().toString());
                         ref.child(FirebaseAuth.getInstance().getUid()).child(Constants.IMAGE_FIELD).setValue(upload.getUrl());
+                        Toast.makeText(EditProfileActivity.this, "Changes have been saved.", Toast.LENGTH_SHORT).show();
                     }
                 });
             }).addOnFailureListener(e -> Toast.makeText(EditProfileActivity.this, "Upload has failed!", Toast.LENGTH_LONG).show()).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {

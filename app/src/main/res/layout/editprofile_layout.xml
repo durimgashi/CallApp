@@ -21,72 +21,53 @@
         android:id="@+id/scrolView_account"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-
         <RelativeLayout
             android:id="@+id/linear_account"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="100dp"
                 android:orientation="vertical">
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
                     android:layout_marginTop="100dp"
+                    android:layout_marginRight="10dp"
                     android:orientation="vertical">
-
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="PROFILE DETAILS"
-                        android:fontFamily="@font/montserratlight"/>
-                        <EditText
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="Please Enter User Name"
-                            android:imeOptions="actionNext"
-                            android:textColorHint="@color/white" />
-
-
-                        <EditText
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="Email Address"
-                            android:imeOptions="actionNext"
-                            android:inputType="textEmailAddress"
-                            android:textColorHint="@color/white" />
-
-
-
-
-                        <EditText
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="password"
-                            android:imeOptions="actionNext"
-                            android:inputType="textPassword"
-                            android:textColorHint="@color/white" />
-
-
+                        android:fontFamily="@font/montserratlight"
+                        android:text="PROFILE DETAILS" />
+                    <EditText
+                        android:id="@+id/username"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Please Enter User Name"
+                        android:imeOptions="actionNext"
+                        android:textColorHint="@color/white" />
+                    <EditText
+                        android:id="@+id/email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Email Address"
+                        android:imeOptions="actionNext"
+                        android:inputType="textEmailAddress"
+                        android:textColorHint="@color/white" />
                 </LinearLayout>
             </LinearLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:gravity="center_vertical"
+                android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true">
-
+                android:gravity="center_vertical">
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/imageview_account_profile"
                     android:layout_width="160dp"
@@ -96,16 +77,14 @@
                     android:src="@drawable/grogu"
                     app:civ_border_color="#FFFFFF"
                     app:civ_border_width="2dp" />
-
-
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/floatingActionButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
                     android:layout_alignEnd="@+id/imageview_account_profile"
+                    android:layout_alignParentTop="true"
                     android:layout_marginTop="10dp"
-                    android:src="@drawable/ic_edit"
-                    android:id="@+id/floatingActionButton" />
+                    android:src="@drawable/ic_edit" />
             </RelativeLayout>
         </RelativeLayout>
     </ScrollView>
