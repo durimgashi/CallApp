@@ -17,6 +17,7 @@ import android.os.Handler;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -54,6 +55,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private Uri imageUri;
     private StorageReference storageRef = FirebaseStorage.getInstance().getReference();
     private Button saveChanges;
+    private EditText username, email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,15 +65,30 @@ public class EditProfileActivity extends AppCompatActivity {
         profileImage = findViewById(R.id.profileImage);
         editProfileImage = findViewById(R.id.editProfileImage);
         saveChanges = findViewById(R.id.saveChanges);
-
         editProfileImage.setOnClickListener(v -> openFileChooser());
         saveChanges.setOnClickListener(v -> saveImage());
+        username = findViewById(R.id.username);
+        email = findViewById(R.id.email);
+
+        email.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
 
         ref.child(FirebaseAuth.getInstance().getUid()).child(Constants.IMAGE_FIELD).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String imageUrl = Objects.requireNonNull(snapshot.getValue()).toString();
                 Picasso.get().load(imageUrl).into(profileImage);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        ref.child(FirebaseAuth.getInstance().getUid()).child(Constants.USERNAME_FIELD).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                username.setText(snapshot.getValue().toString());
             }
 
             @Override
@@ -93,7 +110,6 @@ public class EditProfileActivity extends AppCompatActivity {
 
             fileReference.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
                 final UploadTask uploadTask = fileReference.putFile(imageUri);
-
                 uploadTask.continueWithTask(task -> {
                     if (!task.isSuccessful()) {
                         throw task.getException();
@@ -101,7 +117,6 @@ public class EditProfileActivity extends AppCompatActivity {
                     return fileReference.getDownloadUrl();
                 }).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Toast.makeText(EditProfileActivity.this, "Upload successful", Toast.LENGTH_SHORT).show();
                         Upload upload = new Upload(UUID.randomUUID().toString(), task.getResult().toString());
                         ref.child(FirebaseAuth.getInstance().getUid()).child(Constants.IMAGE_FIELD).setValue(upload.getUrl());
                         Toast.makeText(EditProfileActivity.this, "Changes have been saved.", Toast.LENGTH_SHORT).show();

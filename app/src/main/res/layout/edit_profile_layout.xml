@@ -16,133 +16,114 @@
         android:layout_alignParentTop="true"
         android:layout_marginBottom="50dp"
         android:background="@color/twitterBlue" />
-
-    <ScrollView
-        android:id="@+id/scrolView_account"
+    <RelativeLayout
+        android:id="@+id/linear_account"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-
-        <RelativeLayout
-            android:id="@+id/linear_account"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="150dp"
             android:orientation="vertical">
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="150dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="100dp"
+                android:layout_marginRight="10dp"
                 android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="100dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_margin="5dp"
-                        android:fontFamily="@font/montserratlight"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:text="@string/profile_details"
-                        android:textSize="20sp"/>
-
-                    <EditText
-                        android:id="@+id/username"
-                        android:fontFamily="@font/montserratlight"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Username"
-                        android:imeOptions="actionNext"
-                        android:padding="10dp"
-                        android:paddingStart="20dp"
-                        android:layout_marginBottom="10dp"
-                        android:background="@drawable/gray_edittext" />
-
-                    <EditText
-                        android:id="@+id/email"
-                        android:fontFamily="@font/montserratlight"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Email Address"
-                        android:imeOptions="actionNext"
-                        android:padding="10dp"
-                        android:paddingStart="20dp"
-                        android:layout_marginBottom="10dp"
-                        android:inputType="textEmailAddress"
-                        android:background="@drawable/gray_edittext" />
-<!--                    <EditText-->
-<!--                        android:id="@+id/password"-->
-<!--                        android:fontFamily="@font/montserratlight"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:hint="Password"-->
-<!--                        android:imeOptions="actionNext"-->
-<!--                        android:padding="10dp"-->
-<!--                        android:paddingStart="20dp"-->
-<!--                        android:layout_marginBottom="10dp"-->
-<!--                        android:inputType="textPassword"-->
-<!--                        android:background="@drawable/gray_edittext" />-->
-
-                    <Button
-                        android:id="@+id/saveChanges"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/button_blue"
-                        android:textColor="@color/white"
-                        android:fontFamily="@font/montserratlight"
-                        android:text="SAVE CHANGES"/>
-                </LinearLayout>
-            </LinearLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:gravity="center_vertical"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_marginTop="30dp"
-                    android:id="@+id/profileImage"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    app:civ_border_color="#FFFFFF"
-                    app:civ_border_width="2dp" />
-
-
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:src="@drawable/ic_edit"
-                    android:layout_alignEnd="@+id/profileImage"
-                    android:layout_marginTop="10dp"
-                    android:id="@+id/editProfileImage"
-                    android:contentDescription="@string/edit" />
-
-
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
+                    android:layout_margin="5dp"
+                    android:layout_marginTop="10dp"
                     android:fontFamily="@font/montserratlight"
-                    android:text="durimgmail"
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="23sp"
-                    android:layout_marginBottom="30dp"/>
-            </RelativeLayout>
+                    android:text="@string/profile_details"
+                    android:textSize="20sp" />
+                <EditText
+                    android:id="@+id/username"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/gray_edittext"
+                    android:fontFamily="@font/montserratlight"
+                    android:hint="Username"
+                    android:imeOptions="actionNext"
+                    android:padding="10dp"
+                    android:paddingStart="20dp" />
+                <EditText
+                    android:id="@+id/email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/gray_edittext"
+                    android:fontFamily="@font/montserratlight"
+                    android:hint="Email Address"
+                    android:imeOptions="actionNext"
+                    android:inputType="textEmailAddress"
+                    android:padding="10dp"
+                    android:paddingStart="20dp" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp">
+<!--                    <ProgressBar-->
+<!--                        android:id="@+id/progressBar"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content" />-->
+                    <Button
+                        android:layout_marginTop="10dp"
+                        android:id="@+id/saveChanges"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_gravity="bottom"
+                        android:background="@drawable/button_blue"
+                        android:fontFamily="@font/montserratlight"
+                        android:text="SAVE CHANGES"
+                        android:textColor="@color/white" />
+                </RelativeLayout>
+            </LinearLayout>
+        </LinearLayout>
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:gravity="center_vertical">
 
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profileImage"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="30dp"
+                app:civ_border_color="#FFFFFF"
+                app:civ_border_width="2dp" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/editProfileImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/profileImage"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="10dp"
+                android:contentDescription="@string/edit"
+                android:src="@drawable/ic_edit" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="30dp"
+                android:fontFamily="@font/montserratlight"
+                android:text="durimgmail"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="23sp" />
         </RelativeLayout>
-    </ScrollView>
-
+    </RelativeLayout>
 </RelativeLayout>

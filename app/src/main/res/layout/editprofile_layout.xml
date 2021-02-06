@@ -17,10 +17,10 @@
         android:layout_marginBottom="50dp"
         android:background="@color/twitterBlue" />
 
-    <ScrollView
-        android:id="@+id/scrolView_account"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+<!--    <ScrollView-->
+<!--        android:id="@+id/scrolView_account"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent">-->
         <RelativeLayout
             android:id="@+id/linear_account"
             android:layout_width="match_parent"
@@ -59,6 +59,14 @@
                         android:imeOptions="actionNext"
                         android:inputType="textEmailAddress"
                         android:textColorHint="@color/white" />
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="SAVE CHANGESssss"
+                        android:id="@+id/saveChanges"
+                        android:fontFamily="@font/montserratlight"
+                        android:background="@drawable/button"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -87,5 +95,5 @@
                     android:src="@drawable/ic_edit" />
             </RelativeLayout>
         </RelativeLayout>
-    </ScrollView>
+<!--    </ScrollView>-->
 </RelativeLayout>
