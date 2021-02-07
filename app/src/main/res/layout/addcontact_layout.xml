@@ -15,19 +15,27 @@
         android:elevation="10dp"
         android:paddingVertical="10dp"
         app:contentInsetStart="0dp">
-        <EditText
-            android:id="@+id/usernameAdd"
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_margin="5dp"
-            android:background="@drawable/button"
-            android:ems="10"
-            android:fontFamily="@font/montserratlightttf"
-            android:hint="@string/search_contact"
-            android:drawablePadding="10dp"
-            android:textColorHint="@color/white"
+            android:layout_height="wrap_content"
+            android:text="Users"
             android:textColor="@color/white"
-            android:gravity="center" />
+            android:textSize="25sp"
+            android:fontFamily="@font/montserratlight"
+            android:textAlignment="center"/>
+<!--        <EditText-->
+<!--            android:id="@+id/usernameAdd"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:layout_margin="5dp"-->
+<!--            android:background="@drawable/button"-->
+<!--            android:ems="10"-->
+<!--            android:fontFamily="@font/montserratlightttf"-->
+<!--            android:hint="@string/search_contact"-->
+<!--            android:drawablePadding="10dp"-->
+<!--            android:textColorHint="@color/white"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:gravity="center" />-->
     </androidx.appcompat.widget.Toolbar>
 
 

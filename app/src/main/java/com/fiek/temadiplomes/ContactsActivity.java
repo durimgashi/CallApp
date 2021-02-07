@@ -183,9 +183,9 @@ public class ContactsActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (type.equals(Constants.VOICE_TYPE))
-                    incomingVoiceCallTxt.setText(snapshot.getValue().toString() + " is calling you... (" + type + ")");
+                    incomingVoiceCallTxt.setText(snapshot.getValue().toString() + " is calling you...");
                 else if(type.equals(Constants.VIDEO_TYPE))
-                    incomingVideoCallTxt.setText(snapshot.getValue().toString() + " is calling you... (" + type + ")");
+                    incomingVideoCallTxt.setText(snapshot.getValue().toString() + " is calling you...");
 
                 sendOnChannel1(snapshot.getValue().toString() + " is calling you...", uid);
             }
