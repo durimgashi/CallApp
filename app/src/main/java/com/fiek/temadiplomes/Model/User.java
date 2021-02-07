@@ -15,7 +15,13 @@ public class User {
 
     }
 
-    public User(String email, String username, List<String> friends, Boolean available, String incomingVoice, String incomingVideo, String image) {
+    public User(String email,
+                String username,
+                List<String> friends,
+                Boolean available,
+                String incomingVoice,
+                String incomingVideo,
+                String image) {
         this.email = email;
         this.username = username;
         this.friends = friends;

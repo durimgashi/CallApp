@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
@@ -19,7 +18,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Chronometer;
 import android.widget.TextView;
-
 import com.fiek.temadiplomes.Interfaces.VoiceCallInterface;
 import com.fiek.temadiplomes.Notifications.App;
 import com.fiek.temadiplomes.Utils.Constants;

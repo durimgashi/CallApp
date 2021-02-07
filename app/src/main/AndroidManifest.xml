@@ -19,19 +19,23 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TemaDiplomes.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".EditProfileActivity"></activity>
+        <activity
+            android:name=".EditProfileActivity" />
         <activity
             android:name=".VoiceCallActivity"
             android:noHistory="true" />
-        <activity android:name=".AddContactActivity" />
+        <activity
+            android:name=".AddContactActivity" />
         <activity
             android:name=".VideoCallActivity"
             android:noHistory="true" />
         <activity
             android:name=".ContactsActivity"
             android:noHistory="true" />
-        <activity android:name=".SignUpActivity" />
-        <activity android:name=".SignInActivity">
+        <activity
+            android:name=".SignUpActivity" />
+        <activity
+            android:name=".SignInActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,5 +43,4 @@
             </intent-filter>
         </activity>
     </application>
-
 </manifest>

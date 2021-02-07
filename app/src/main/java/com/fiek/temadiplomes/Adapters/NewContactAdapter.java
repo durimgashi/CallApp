@@ -8,10 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.fiek.temadiplomes.Utils.Constants;
 import com.fiek.temadiplomes.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,11 +18,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 import com.tapadoo.alerter.Alerter;
-
 import java.util.ArrayList;
 import java.util.List;
 

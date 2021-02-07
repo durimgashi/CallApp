@@ -2,21 +2,14 @@ package com.fiek.temadiplomes.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
-import androidx.core.graphics.drawable.RoundedBitmapDrawable;
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.fiek.temadiplomes.Utils.Constants;
-import com.fiek.temadiplomes.Model.User;
 import com.fiek.temadiplomes.R;
 import com.fiek.temadiplomes.VideoCallActivity;
 import com.fiek.temadiplomes.VoiceCallActivity;
@@ -25,9 +18,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +30,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     private List<String> Uid = new ArrayList<>();
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference ref = database.getReference();
-    private User user = new User();
 
     public ContactAdapter(Context context, List<String> data) {
         this.mInflater = LayoutInflater.from(context);
@@ -119,23 +109,15 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         }
     }
 
-    // convenience method for getting data at click position
     String getItem(int id) {
         return mData.get(id);
     }
 
-    // allows clicks events to be caught
     void setClickListener(ItemClickListener itemClickListener) {
         this.mClickListener = itemClickListener;
     }
 
-    // parent activity will implement this method to respond to click events
     public interface ItemClickListener {
         void onItemClick(View view, int position);
-    }
-
-    public void filterList(ArrayList<String> filterdNames) {
-        this.mData = filterdNames;
-        notifyDataSetChanged();
     }
 }
