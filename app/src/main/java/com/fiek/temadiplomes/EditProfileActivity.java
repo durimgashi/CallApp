@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.fiek.temadiplomes.Model.Upload;
 import com.fiek.temadiplomes.Utils.Constants;
@@ -38,6 +39,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private StorageReference storageRef = FirebaseStorage.getInstance().getReference();
     private Button saveChanges;
     private EditText username, email;
+    private TextView displayUsername;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +51,12 @@ public class EditProfileActivity extends AppCompatActivity {
         saveChanges = findViewById(R.id.saveChanges);
         editProfileImage.setOnClickListener(v -> openFileChooser());
         saveChanges.setOnClickListener(v -> saveImage());
+        displayUsername = findViewById(R.id.displayUsername);
         username = findViewById(R.id.username);
         email = findViewById(R.id.email);
+
+        username.setEnabled(false);
+        email.setEnabled(false);
 
         email.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
 
@@ -71,6 +77,7 @@ public class EditProfileActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 username.setText(snapshot.getValue().toString());
+                displayUsername.setText(snapshot.getValue().toString());
             }
 
             @Override

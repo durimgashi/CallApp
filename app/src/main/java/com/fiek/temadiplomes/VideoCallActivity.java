@@ -5,6 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.View;
@@ -35,6 +38,7 @@ public class VideoCallActivity extends AppCompatActivity {
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference ref = database.getReference();
     private Chronometer simpleChronometer;
+    private MediaPlayer mMediaPlayer = new MediaPlayer();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +48,16 @@ public class VideoCallActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
         );
+
+        Uri mediaPath = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.dialing_sound);
+        try {
+            mMediaPlayer.setDataSource(getApplicationContext(), mediaPath);
+            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_VOICE_CALL);
+            mMediaPlayer.prepare();
+            mMediaPlayer.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         simpleChronometer = findViewById(R.id.counter);
         webView = findViewById(R.id.videocallWV);
@@ -78,6 +92,7 @@ public class VideoCallActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.getValue().equals(friendUID)){
+                    mMediaPlayer.stop();
                     findViewById(R.id.textToCounter).setVisibility(View.INVISIBLE);
                     simpleChronometer.setVisibility(View.VISIBLE);
                     simpleChronometer.setBase(SystemClock.elapsedRealtime());
@@ -153,6 +168,7 @@ public class VideoCallActivity extends AppCompatActivity {
 
     public void endItAll(){
         webView.loadUrl("about:blank");
+        mMediaPlayer.stop();
         Intent intent = new Intent(VideoCallActivity.this, ContactsActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

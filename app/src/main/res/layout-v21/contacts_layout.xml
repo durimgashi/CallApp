@@ -167,12 +167,14 @@
             android:contentDescription="Add Contact"
             android:src="@drawable/ic_add"
             tools:ignore="HardcodedText" />
+
+
+        <ImageView
+            android:id="@+id/noCont"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:src="@drawable/nocontact"
+            android:visibility="gone" />
     </FrameLayout>
 
-    <ImageView
-        android:id="@+id/noCont"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:src="@drawable/nocontact"
-        android:visibility="gone" />
 </LinearLayout>

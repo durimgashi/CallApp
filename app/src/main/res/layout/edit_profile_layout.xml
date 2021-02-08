@@ -115,12 +115,13 @@
                 android:src="@drawable/ic_edit" />
 
             <TextView
+                android:id="@+id/displayUsername"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="30dp"
                 android:fontFamily="@font/montserratlight"
-                android:text="durimgmail"
+                android:text=""
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="23sp" />

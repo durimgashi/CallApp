@@ -63,6 +63,8 @@ public class NewContactAdapter extends RecyclerView.Adapter<NewContactAdapter.Vi
 
                 Picasso.get().load(snapshot.child(Constants.IMAGE_FIELD).getValue().toString()).into(holder.profile_image);
 
+                assert FirebaseAuth.getInstance().getUid() != null;
+
                 ref.child(FirebaseAuth.getInstance().getUid()).child(Constants.FRIENDS_FILED).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {

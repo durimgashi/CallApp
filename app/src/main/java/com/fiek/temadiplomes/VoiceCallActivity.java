@@ -8,6 +8,9 @@ import androidx.core.content.ContextCompat;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.View;
@@ -43,6 +46,7 @@ public class VoiceCallActivity extends AppCompatActivity {
     private AnimationDrawable animationDrawable;
     private Chronometer simpleChronometer;
     private NotificationManagerCompat notificationManagerCompat;
+    private MediaPlayer mMediaPlayer = new MediaPlayer();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +56,15 @@ public class VoiceCallActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
         );
+
+//        Uri mediaPath = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.dialing_sound);
+//        try {
+//            mMediaPlayer.setDataSource(getApplicationContext(), mediaPath);
+//            mMediaPlayer.prepare();
+//            mMediaPlayer.start();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
         notificationManagerCompat = NotificationManagerCompat.from(VoiceCallActivity.this);
         notificationManagerCompat.deleteNotificationChannel(App.CHANNEL_1_ID);
@@ -111,6 +124,7 @@ public class VoiceCallActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.getValue().equals(friendUID)){
+                    mMediaPlayer.stop();
                     findViewById(R.id.textToCounter).setVisibility(View.INVISIBLE);
                     simpleChronometer.setVisibility(View.VISIBLE);
                     simpleChronometer.setBase(SystemClock.elapsedRealtime());
@@ -185,6 +199,7 @@ public class VoiceCallActivity extends AppCompatActivity {
     }
 
     public void endItAll(){
+        mMediaPlayer.stop();
         webView.loadUrl("about:blank");
         Intent intent = new Intent(VoiceCallActivity.this, ContactsActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

@@ -17,3 +17,9 @@ html, body {
     margin: 16px;
     border-radius: 16px;
 }
+
+video{
+    transform: rotateY(180deg);
+    -webkit-transform:rotateY(180deg);
+    -moz-transform:rotateY(180deg);
+}

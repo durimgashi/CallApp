@@ -198,21 +198,21 @@ public class ContactsActivity extends AppCompatActivity {
     }
 
     public void sendOnChannel1(String text, String callerUid){
-        Intent answerVoiceIntent = new Intent(ContactsActivity.this, VoiceCallActivity.class);
-        answerVoiceIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        answerVoiceIntent.setAction(Intent.ACTION_ANSWER);
-        answerVoiceIntent.putExtra("friendUID", callerUid);
-        PendingIntent pendingVoiceIntent = PendingIntent.getActivity(this, 0, answerVoiceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-
-        Notification notification = new NotificationCompat.Builder(ContactsActivity.this, App.CHANNEL_1_ID)
-                .setSmallIcon(R.drawable.bird)
-                .setContentTitle(text)
-                .setCategory(NotificationCompat.CATEGORY_CALL)
-                .setContentIntent(pendingVoiceIntent)
-                .addAction(R.drawable.answercall, "Answer", pendingVoiceIntent)
-                .build();
-        notificationManagerCompat.notify(1, notification);
+//        Intent answerVoiceIntent = new Intent(ContactsActivity.this, VoiceCallActivity.class);
+//        answerVoiceIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//        answerVoiceIntent.setAction(Intent.ACTION_ANSWER);
+//        answerVoiceIntent.putExtra("friendUID", callerUid);
+//        PendingIntent pendingVoiceIntent = PendingIntent.getActivity(this, 0, answerVoiceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+//
+//
+//        Notification notification = new NotificationCompat.Builder(ContactsActivity.this, App.CHANNEL_1_ID)
+//                .setSmallIcon(R.drawable.bird)
+//                .setContentTitle(text)
+//                .setCategory(NotificationCompat.CATEGORY_CALL)
+//                .setContentIntent(pendingVoiceIntent)
+//                .addAction(R.drawable.answercall, "Answer", pendingVoiceIntent)
+//                .build();
+//        notificationManagerCompat.notify(1, notification);
     }
 
     public RecyclerView contactsRecyclerView;
